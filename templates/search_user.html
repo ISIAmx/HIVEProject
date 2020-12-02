@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar_Usuario</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/searching_user.css') }}">
+    <script src="{{ url_for('static', filename='js/search_user.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/update_user.js') }}"></script>
+</head>
+
+<body>
+    <h1>Buscar Usuario</h1>
+    <!-----------Botones para activar botones segun la opcion de busqueda-->
+    <button onclick="opciones(event,1)">Por nombre</button>
+   
+    <!-----------Campo y boton para buscar por nombre-->
+    <div class="seccion" id="1">
+        <input type="text" placeholder="Ingrese Nombre" name="nombre" id="nom">
+        <button id="btn1">Buscar</button>
+    </div>
+
+    <!-----------Resultado de busqueda-->
+    <div>
+        <h3>Resultado</h3>
+        <p id="resultado">------</p>
+    </div>
+
+    <!-----------Botones para Modificar y Borrar usuario buscado-->
+    <div id="btn-opciones">
+        <button onclick="activar_contenedor(event,'cont')">Modificar</button>
+        <button id="borrar-usuario">Eliminar</button>
+    </div>
+
+
+    <!-----------campos para los datos de usuario a modificar-->
+    <div class="contenedor" id='cont'>
+        <input type="text" id="mod-nombre">
+        <input type="text" id="mod-contrasenia">
+        <button id="btn-modificar">Guardar Cambios</button>
+    </div>
+
+    <!--Botones para navegar entre archivos html-->
+    <div class="nav">
+        <form action="/users">
+            <button type="submit">Ver Usuarios</button>
+        </form>
+
+        <form action="/">
+            <button type="submit">Registrar Usuarios</button>
+        </form>
+    </div>
+</body>
+
+</html>

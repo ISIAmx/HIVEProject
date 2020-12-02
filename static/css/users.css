@@ -1,0 +1,28 @@
+body{
+    background-color: rgb(59, 7, 42);
+}
+
+h2{
+    color:rgb(255, 255, 255);
+    text-align: center;
+}
+
+p{
+    color:rgb(255, 255, 255);
+    text-align:center;
+    padding-top: 20px;
+}
+
+div,#lista_usuarios{
+    text-align: center;
+    width: 30%;
+    margin: auto;
+    display: block;
+}
+
+.nav{
+    width: 20%;
+    margin:auto;
+    padding-top: 100px;
+    text-align: center;
+}

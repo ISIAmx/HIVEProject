@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home_test.css') }}" />
+    <script src="{{ url_for('static', filename='js/home_test.js') }}"></script>
+
+</head>
+
+<body>
+    <div class="header"></div>
+    <h3>Registrar Usuario</h3>
+
+    <div class="field-datas">
+        <div>
+            <input type="text" placeholder="Nombre de usuario" class="input-field" id="username" />
+        </div>
+        <div>
+            <input type="password" placeholder="Contraseña" class="input-field" id="password" />
+        </div>
+
+        <div class="btn" id="btn-register">
+            <button>Registrar</button>
+        </div>
+
+        <div class="nav-btn">
+            <form action="/search_users" id="usuarios">
+                <button type="submit" >Ver Usuarios Registrados</button> 
+            </form>
+           
+        </div>
+       
+    </div>
+</body>
+
+</html>

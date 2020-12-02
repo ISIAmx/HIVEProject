@@ -1,0 +1,3 @@
+use Usuarios;
+
+create table usuarios ( usr_id int primary key, nombre varchar(40), contrasenia varchar(25) );

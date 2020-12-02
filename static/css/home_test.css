@@ -1,0 +1,64 @@
+body {
+  background-color: rgb(242, 233, 228);
+}
+
+.header {
+  width: 100%;
+  height: 60px;
+  background-color: rgb(34, 34, 59);
+  margin-bottom: 10px;
+}
+
+h3 {
+  color: rgb(74, 78, 105);
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.field-datas {
+  width: 30%;
+  margin: auto;
+}
+
+.field-datas > div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 20px 10px;
+}
+
+.input-field {
+  height: 50px;
+}
+
+.btn, .nav-btn{
+  width: 50%;
+  margin: auto;
+}
+
+.btn button {
+  height: 50px;
+  background-color: rgb(154, 140, 152);
+  border-radius: 5px;
+  border-style: none;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+}
+
+.btn button:hover {
+  opacity: 0.8;
+}
+
+.nav-btn button {
+  height: 50px;
+  background-color: rgb(78, 34, 34);
+  border-radius: 5px;
+  border-style: none;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+}
+
+.nav-btn button:hover {
+  opacity: 0.8;
+}

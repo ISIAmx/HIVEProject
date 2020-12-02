@@ -1,0 +1,21 @@
+body{
+    background-color: rgb(63, 11, 50);
+    color: rgb(255, 255, 255);
+}
+
+.seccion{
+    display: none;
+}
+
+.contenedor{
+    display: none;
+    width: 20%;
+}
+
+.nav{
+    width: 20%;
+    margin:auto;
+    padding-top: 100px;
+    text-align: center;
+}
+
