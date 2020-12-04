@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+</head>
+
+<body>
+    <div class="advice">
+        <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima
+            repudiandae ipsum, perspiciatis aut officia dolo!
+        </p>
+    </div>
+    <div class="container">
+        <div>
+            <nav class="nav-main">
+                <div class="image-background">
+                    <a href="#">
+                        <img src="{{url_for('static', filename='img/logo.png')}}" alt="Curangel LOGO"
+                            class="nav-logo" />
+                    </a>
+                </div>
+                <div>
+                    <ul class="nav-menu">
+                        <li>
+                            <form action="/login" id="login">
+                                <button class="nav-btn" type="submit">INGRESAR</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form action="/register" id="register">
+                                <button class="nav-btn" type="submit">REGISTRARSE</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <main>
+        <div class="main-content">
+            <div class="left-section">
+                <h2>Lorem ipsum dolor adem</h2>
+                <div class="buttons-left-section">
+                    <button>Section 1</button>
+                    <button>Section 2</button>
+                    <button>Section 3</button>
+                    <button>Section 4</button>
+                </div>
+                <div class="left-content">
+
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa
+                        quam ad reiciendis cupiditate minus, accusantium magnam, nihil sed
+                        numquam fugit a laboriosam labore laborum, itaque dolorum? Vitae
+                        quos aliquid voluptates.
+                    </p>
+                    <p>
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maxime
+                        optio, repudiandae cumque sapiente consequuntur labore. Molestiae,
+                        magni, accusantium cumque minima similique pariatur saepe repellat
+                        quos dignissimos deserunt eaque quam omnis.
+                    </p>
+                </div>
+
+
+            </div>
+
+            <div class="right-section">
+                <img src="{{url_for('static', filename='img/img2.png')}}" class="img2" alt="img2" />
+                <div class="field-datas">
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facilis,
+                        aliquam?
+                    </p>
+                    <input type="text" placeholder="Nombre de usuario HIVE" />
+                    <input type="text" placeholder="HP a delegar" />
+                    <button>Delegar</button>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="information"></div>
+    </main>
+
+    <footer>
+
+    </footer>
+</body>
+
+</html>
