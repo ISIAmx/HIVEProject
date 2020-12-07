@@ -2,4 +2,4 @@ create database Usuarios;
 
 use Usuarios;
 
-create table usuarios ( usr_id int primary key, username varchar(40), password varchar(25) );
+create table usuarios ( usr_id int primary key, username varchar(40), password varchar(100) );

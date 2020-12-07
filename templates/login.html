@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Ingresar</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </head>
 
 <body>
@@ -28,9 +30,9 @@
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facilis,
                 aliquam?
             </p>
-            <input type="text" placeholder="Usuario HIVE" />
-            <input type="password" placeholder="Contraseña" />
-            <button>Ingresar</button>
+            <input type="text" id="username" placeholder="Usuario HIVE" />
+            <input type="password" id="password" placeholder="Clave de posteo" />
+            <button id="btn-login">Ingresar</button>
         </div>
     </main>
 

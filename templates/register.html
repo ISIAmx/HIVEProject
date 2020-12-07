@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Registrarse</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
 </head>
 
 <body>
@@ -28,11 +31,10 @@
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facilis,
                 aliquam?
             </p>
-            <input type="text" placeholder="Información" />
-            <input type="text" placeholder="Información" />
-            <input type="text" placeholder="Información" />
-            <input type="text" placeholder="Información" />
-            <button>Registrarse</button>
+            <input id="username" type="text" placeholder="Usuario Hive" />
+            <input id="password" type="password" placeholder="Clave de posteo" />
+
+            <button id="btn-register">Registrarse</button>
         </div>
     </main>
 

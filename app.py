@@ -1,8 +1,11 @@
 from flask import Flask
+import flask
 from flask import render_template
 from db_operations import *
 from flask import request, json, jsonify
 from secrets import randbelow
+# Libreria para generar hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from flaskext.mysql import MySQL  # Extension para accesar a Base de Datos
 
@@ -19,44 +22,57 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    if flask.request.method == 'POST':
+        json_data = request.get_json()
+        username = json_data['username']
+        password = json_data['password']
+
+        hashed_password = generate_password_hash(password)
+
+        registrado = existe_usuario(username, hashed_password)
+
+        if registrado == True:
+            status = 'Este usuario ya existe, intente con otro'
+            return json.dumps({'status': status})  # Devuleve Json
+        else:
+            # Inserta Usuario
+            id = consultar_id()
+            usr = (id, username, hashed_password)
+            insert_user(conn, usr)
+            status = 'Registrado con éxito'
+            return json.dumps({'status': status})  # Devuleve Json
+    else:
+        return render_template('register.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if flask.request.method == 'POST':
+        json_data = request.get_json()
+        username = json_data['username']
+        password = json_data['password']
 
+        registrado = existe_usuario(username, password)
 
-@app.route('/home_test', methods=['POST'])  # Registra Usuario
-def insertarUsuario():
-    json_data = request.get_json()
-
-    username = json_data['username']
-    password = json_data['password']
-
-    registrado = existe_usuario(username, password)
-
-    if registrado == True:
-        status = 'Este usuario ya existe en Base de Datos'
+        if registrado == True:
+            status = 'Bienvenido'
+        else:
+            status = 'Usuario Inexistente'
         return json.dumps({'status': status})  # Devuleve Json
     else:
-        # Inserta Usuario
-        id = consultar_id()
-        usr = (id, username, password)
-        insert_user(conn, usr)
-        status = 'Registrado con éxito'
-        return json.dumps({'status': status})  # Devuleve Json
+        return render_template('login.html')
 
 
-def existe_usuario(username, password):
+def existe_usuario(username, pwd):
     usuarios = query_users(conn)
+
     if usuarios == []:
         return False
     else:
         for usr in usuarios:
-            if (username == usr['user']) & (password == usr['password']):
+            if (username == usr['user']) or (check_password_hash(usr['password'], pwd)):
                 return True
 
         return False
@@ -72,43 +88,6 @@ def consultar_id():
             for usr in usuarios:
                 if id != usr['id']:
                     return id
-
-
-@app.route('/users')
-def users():
-    return render_template("users.html")
-
-
-@app.route('/search_users')
-def buscar_usuario():
-    return render_template("search_user.html")
-
-
-@app.route('/users', methods=['POST'])
-def ver_usuarios():
-    json_data = request.get_json()
-
-    btn = json_data['click']
-
-    if btn == 'true':
-        users = query_users(conn)
-        return (jsonify(users), 200)  # Devuleve Json
-
-
-@app.route('/search_user', methods=['POST'])
-def buscar_usuarios():
-    opcion = ""
-    json_data = request.get_json()
-    if json_data['op'] == "1":
-        opcion = "username"
-        dato = json_data['nom']
-
-    print(opcion)
-    print(dato)
-
-    users = query_data(conn, opcion, dato)
-    print(users)
-    return (jsonify(users), 200)  # Devuleve Json
 
 
 @app.route('/delete_user', methods=['POST'])

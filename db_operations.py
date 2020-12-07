@@ -25,21 +25,27 @@ def query_users(db_conn):
         return None
 
 
-def query_data(conn, opcion, dato):
+'''
+def query_data(conn, username, password):
     cur = conn.cursor()
 
     # Obtiene usario por la opcion recibida (nombre)
     query = "SELECT * FROM usuarios WHERE username = %s;"
     print(query)
-    cur.execute(query, dato)
+    cur.execute(query, username)
 
-    usuarios = [
-        dict(id=row[0], nombre=row[1], contrasenia=row[2])
+    username = [
+        dict(id=row[0], usrname=row[1], pwd=row[2])
         for row in cur.fetchall()
     ]
 
-    if usuarios is not None:
-        return usuarios
+    print(username)
+
+    if username is not None:
+        return True
+    else:
+        return False
+'''
 
 
 def update_usr(conn, usr):
