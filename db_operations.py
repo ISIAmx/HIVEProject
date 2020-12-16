@@ -1,4 +1,4 @@
-
+'''
 
 def insert_user(db_conn, usr):
     cursor = db_conn.cursor()
@@ -25,32 +25,30 @@ def query_users(db_conn):
         return None
 
 
-'''
-def query_data(conn, username, password):
+def query_id(conn, usr_id):
     cur = conn.cursor()
-
+    usr_id = int(usr_id)
     # Obtiene usario por la opcion recibida (nombre)
-    query = "SELECT * FROM usuarios WHERE username = %s;"
+    query = "SELECT * FROM usuarios WHERE usr_id = %s;"
     print(query)
-    cur.execute(query, username)
+    cur.execute(query, usr_id)
 
-    username = [
+    usr_id = [
         dict(id=row[0], usrname=row[1], pwd=row[2])
         for row in cur.fetchall()
     ]
 
-    print(username)
+    print(usr_id)
 
     if username is not None:
         return True
     else:
-        return False
-'''
+        return None
 
 
 def update_usr(conn, usr):
     # Modifica nuevo usuario
-    query = ''' UPDATE usuarios SET username = %s, password = %s WHERE usr_id=%s '''
+    query = ''' UPDATE usuarios SET username = %s, password = %s WHERE usr_id = %s '''
     cur = conn.cursor()
     cur.execute(query, usr)
     conn.commit()
@@ -62,3 +60,4 @@ def delete_user(conn, id_borrar):
     cur = conn.cursor()
     cur.execute(query, (id_borrar,))
     conn.commit()
+'''

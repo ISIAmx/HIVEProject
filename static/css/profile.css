@@ -1,0 +1,56 @@
+* {
+  box-sizing: content-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+body {
+  background-color: rgb(235, 235, 235);
+}
+
+/*Navigation*/
+.nav-main {
+  background-color: rgb(18, 69, 89);
+  font-size: 15px;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.image-background {
+  background-color: rgb(255, 255, 255);
+  width: 60px;
+  justify-content: flex-start;
+}
+
+
+.user-info p{
+  color: rgb(255, 255, 255);
+  margin: 20px;
+  }
+
+.logout form button{
+  margin: 20px;
+  color: rgb(255, 255, 255);
+  background-color: rgb(18, 69, 89);
+  border: none;
+}
+
+.nav-logo {
+  width: 60px;
+  margin: auto;
+}
+
+main p{
+  font-size: 50px;
+  width: 50%;
+  margin: auto;
+}
+
+footer {
+  margin-top: 400px;
+  height: 50px;
+  background-color: rgb(18, 69, 89);
+}

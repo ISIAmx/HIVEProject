@@ -14,7 +14,12 @@ $(function () {
                 password: pwd
             }),
             success: function (data) {
-                alert(data.status); 
+                if (data.status == 1) {
+                    window.location.href = "profile";
+                } else {
+                    $('#message').append('Datos Incorrectos o Usuario no Existe');
+                }
+
             },
             error: function (error) { //Si se obtiene algun error
                 console.log(error);

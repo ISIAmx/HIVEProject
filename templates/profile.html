@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ingresar</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+    <title>Perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </head>
@@ -21,30 +21,23 @@
                     </a>
                 </div>
 
-                <div class="home">
-                    <form action="/" method="GET">
-                        <button class="nav-btn" type="submit">REGRESAR</button>
+                <div class="user-info">
+                    {% block content %}
+                    <p class="title">
+                        BIENVENIDO {{ username }} !
+                    </p>
+                    {% endblock %}
+                </div>
+
+                <div class="logout">
+                    <form action="/logout" method="GET">
+                        <button class="nav-btn" type="submit">SALIR</button>
                     </form>
                 </div>
             </nav>
         </div>
     </div>
-
     <main>
-        <div class="field-datas">
-            <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facilis,
-                aliquam?
-            </p>
-            <input type="text" id="username" placeholder="Usuario HIVE" />
-            <input type="password" id="password" placeholder="Clave de posteo" />
-            <button id="btn-login">Ingresar</button>
-        </div>
-        <div>
-            <p class="message" id="message">
-
-            </p>
-        </div>
     </main>
 
     <footer>

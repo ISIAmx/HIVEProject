@@ -1,9 +1,10 @@
 # HIVEProject
 Built with
 * MySQL version 5.7.32-0ubuntu0.18.04.1 (Ubuntu)
-* Python 3.8.6
-* Flask 1.1.2
-* Flask-mysql 1.5.1
+* python 3.8.6
+* flask 1.1.2
+* flask-login 0.5.0
+* flask-sqlalchemy 2.4.4
 
 ### DB
 From the server, creating an user with
@@ -13,8 +14,6 @@ From the server, creating an user with
 ```
  GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost' IDENTIFIED BY 'password';
 ```
-
-To create the tables, use the **database.txt** file from HIVEPROJECT folder
 
 ### Web App
 From the directory
@@ -28,6 +27,13 @@ Typing
  ```
  ```
  pipenv shell 
+ ```
+
+ To create the tables, use
+ ```
+ $ python
+ $ from app import db
+ $ db.create_all()
  ```
 
  Then

@@ -30,6 +30,13 @@ body {
   margin: auto;
 }
 
+.home form button {
+  margin: 20px;
+  color: rgb(255, 255, 255);
+  background-color: rgb(18, 69, 89);
+  border: none;
+}
+
 main {
   margin-top: 50px;
   margin-bottom: 200px;
