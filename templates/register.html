@@ -7,7 +7,7 @@
     <title>Registrarse</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
 
 </head>
 
@@ -37,18 +37,23 @@
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facilis,
                 aliquam?
             </p>
-            <input id="username" type="text" placeholder="Usuario Hive" />
-            <input id="password" type="password" placeholder="Clave de posteo" />
+            <input id="registerUsername" type="text" placeholder="Usuario Hive" />
+            <input id="registerPostingKey" type="password" placeholder="Clave de posteo" />
 
             <button id="btn-register">Registrarse</button>
+        </div>
+        <div>
+            <p class="message" id="message">
+
+            </p>
         </div>
     </main>
 
     <footer>
 
     </footer>
-
-
+    <script src="//cdn.jsdelivr.net/npm/steem/dist/steem.min.js"></script>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </body>
 
 </html>

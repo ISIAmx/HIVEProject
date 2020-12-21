@@ -47,7 +47,7 @@ def register():
         user = usuarios.query.filter_by(username=username).first()
 
         if user:  # Si el usuario existe
-            status = 'Este usuario ya existe, intente con otro'
+            status = 'Bien! Usuario Existente'
             return json.dumps({'status': status})  # Devuleve Json
         # Crea nuevo usuario
         new_user = usuarios(username=username, password=generate_password_hash(

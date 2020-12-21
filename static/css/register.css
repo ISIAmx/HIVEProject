@@ -74,6 +74,14 @@ main {
   opacity: 0.8;
 }
 
+.message {
+  color: rgb(150, 44, 44);
+  margin-top: 10px;
+  margin-left: 50px;
+  font-size: 15px;
+  width: 300px;
+}
+
 footer {
   height: 50px;
   background-color: rgb(18, 69, 89);
