@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 flask = "*"
@@ -11,6 +12,10 @@ flask-mysql = "*"
 werkzeug = "*"
 flask-login = "*"
 flask-sqlalchemy = "*"
+cryptography = "*"
+pylint = "*"
+marshmallow-sqlalchemy = "*"
+flask-marshmallow = "*"
 
 [requires]
 python_version = "3.8"

@@ -6,8 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+
 </head>
 
 <body>
@@ -15,7 +18,7 @@
         <div>
             <nav class="nav-main">
                 <div class="image-background">
-                    <a href="#">
+                    <a href="#" onclick="home_redirect()">
                         <img src="{{url_for('static', filename='img/logo.png')}}" alt="Curangel LOGO"
                             class="nav-logo" />
                     </a>
@@ -24,25 +27,191 @@
                 <div class="user-info">
                     {% block content %}
                     <p class="title">
-                        BIENVENIDO {{ username }} !
+                        BIENVENID@ {{ username }} !
                     </p>
                     {% endblock %}
                 </div>
 
-                <div class="logout">
-                    <form action="/logout" method="GET">
-                        <button class="nav-btn" type="submit">SALIR</button>
-                    </form>
+                <div class="option-buttons">
+                    <div class="logout">
+                        <form action="/logout" method="GET">
+                            <button class="nav-btn" type="submit">SALIR</button>
+                        </form>
+                    </div>
+
+                    {% if admin_user == true %}
+                    <div class="admin">
+                        <button class="nav-btn" onclick="enableAdminSection('main-section')">ADMIN</button>
+                    </div>
+                    {% endif %}
                 </div>
+
             </nav>
         </div>
     </div>
+
     <main>
+        <div class="main-section" id="main-section">
+            <h3>Lorem ipsum dolor sit amet consectetur adipisicing </h3>
+            <div class="options-section" id="option1">
+                <button onclick="pressing_button('table1')">Administración</button>
+            </div>
+            <div class="table-content" id="table1">
+                <table id="table" class="admin-table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Cuenta</th>
+                            <th>Curador</th>
+                            <th>Delegador</th>
+                            <th>Administrador</th>
+                            <th>Fecha de creación</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                </table>
+            </div>
+            <div class="options-section" id="option2">
+                <button onclick="pressing_button('table2')">Opción 2</button>
+            </div>
+            <div class="table-content" id="table2">
+                <table id="tableD1" class="admin-table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Cuenta</th>
+                            <th>Curador</th>
+                            <th>Delegador</th>
+                            <th>Administrador</th>
+                            <th>Creación</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tiger Nixon</td>
+                            <td>System Architect</td>
+                            <td>Edinburgh</td>
+                            <td>61</td>
+                            <td>2011/04/25</td>
+                            <td>$320,800</td>
+                        </tr>
+                        <tr>
+                            <td>Garrett Winters</td>
+                            <td>Accountant</td>
+                            <td>Tokyo</td>
+                            <td>63</td>
+                            <td>2011/07/25</td>
+                            <td>$170,750</td>
+                        </tr>
+                        <tr>
+                            <td>Ashton Cox</td>
+                            <td>Junior Technical Author</td>
+                            <td>San Francisco</td>
+                            <td>66</td>
+                            <td>2009/01/12</td>
+                            <td>$86,000</td>
+                        </tr>
+
+                </table>
+            </div>
+            <div class="options-section" id="option3">
+                <button onclick="pressing_button('table3')">Opción 3</button>
+            </div>
+            <div class="table-content" id="table3">
+                <table id="table" class="admin-table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Cuenta</th>
+                            <th>Curador</th>
+                            <th>Delegador</th>
+                            <th>Administrador</th>
+                            <th>Creación</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tiger Nixon</td>
+                            <td>System Architect</td>
+                            <td>Edinburgh</td>
+                            <td>61</td>
+                            <td>2011/04/25</td>
+                            <td>$320,800</td>
+                        </tr>
+                        <tr>
+                            <td>Garrett Winters</td>
+                            <td>Accountant</td>
+                            <td>Tokyo</td>
+                            <td>63</td>
+                            <td>2011/07/25</td>
+                            <td>$170,750</td>
+                        </tr>
+                        <tr>
+                            <td>Ashton Cox</td>
+                            <td>Junior Technical Author</td>
+                            <td>San Francisco</td>
+                            <td>66</td>
+                            <td>2009/01/12</td>
+                            <td>$86,000</td>
+                        </tr>
+                </table>
+            </div>
+            <div class="options-section" id="option4">
+                <button onclick="pressing_button('table4')">Opción 4</button>
+            </div>
+            <div class="table-content" id="table4">
+                <table id="table" class="admin-table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Cuenta</th>
+                            <th>Curador</th>
+                            <th>Delegador</th>
+                            <th>Administrador</th>
+                            <th>Creación</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tiger Nixon</td>
+                            <td>System Architect</td>
+                            <td>Edinburgh</td>
+                            <td>61</td>
+                            <td>2011/04/25</td>
+                            <td>$320,800</td>
+                        </tr>
+                        <tr>
+                            <td>Garrett Winters</td>
+                            <td>Accountant</td>
+                            <td>Tokyo</td>
+                            <td>63</td>
+                            <td>2011/07/25</td>
+                            <td>$170,750</td>
+                        </tr>
+                        <tr>
+                            <td>Ashton Cox</td>
+                            <td>Junior Technical Author</td>
+                            <td>San Francisco</td>
+                            <td>66</td>
+                            <td>2009/01/12</td>
+                            <td>$86,000</td>
+                        </tr>
+                </table>
+            </div>
+        </div>
+
     </main>
 
     <footer>
 
     </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+
 </body>
 
 </html>

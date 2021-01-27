@@ -12,6 +12,7 @@ class DevConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://username:password@localhost/Usuarios'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    auth_plugin='mysql_native_password'
     ''' MYSQL_DATABASE_USER = 'username'
     MYSQL_DATABASE_PASSWORD = 'password'
     MYSQL_DATABASE_HOST = 'localhost'

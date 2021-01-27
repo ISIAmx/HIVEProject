@@ -31,11 +31,25 @@ body {
   margin: 20px;
   }
 
+.option-buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logout form button{
-  margin: 20px;
   color: rgb(255, 255, 255);
   background-color: rgb(18, 69, 89);
   border: none;
+  margin-right: 20px;
+}
+
+.admin button{
+  color: rgb(255, 255, 255);
+  background-color: rgb(18, 69, 89);
+  border: none;
+  margin-right: 20px;
+  display: display;
 }
 
 .nav-logo {
@@ -43,10 +57,62 @@ body {
   margin: auto;
 }
 
-main p{
-  font-size: 50px;
-  width: 50%;
+main {
+  font-size: 15px;
+  
+}
+
+main h3{
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+.main-section{
+  width: 70%;
   margin: auto;
+  display: none;
+}
+
+.options-section{
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  border-style:groove;
+  border-width: 0.5px;
+
+}
+
+.options-section button{
+  font-weight: bolder;
+  width: 100%;
+  height: 50px;
+  border: none;
+  background-color: rgb(176, 216, 213);
+  padding:0%;
+  outline: none;
+  
+}
+
+.options-section:hover{
+  opacity: 0.8;
+}
+
+.table-content{
+  display: none;
+}
+
+.admin-table{
+  margin: 15px;
+}
+
+.button-delete,.button-status{
+  background-color: white;
+  border: none;
+  outline: none;
+}
+
+.button-delete:hover{
+  opacity:0.5; 
 }
 
 footer {
