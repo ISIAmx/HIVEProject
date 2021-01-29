@@ -26,6 +26,7 @@
                 </div>
                 <div>
                     <ul class="nav-menu">
+                        {% if profile == false %}
                         <li>
                             <form action="/login" id="login" method="GET">
                                 <button class="nav-btn" type="submit">INGRESAR</button>
@@ -36,6 +37,19 @@
                                 <button class="nav-btn" type="submit">REGISTRARSE</button>
                             </form>
                         </li>
+                        {% else %}
+                        <li>
+                            <form action="/logout" method="GET">
+                                <button class="nav-btn" type="submit">SALIR</button>
+                            </form>
+                        </li>
+
+                        <li>
+                            <form action="/profile" method="GET">
+                                <button class="nav-btn" type="submit">PERFIL</button>
+                            </form>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
@@ -53,7 +67,6 @@
                     <button>Section 4</button>
                 </div>
                 <div class="left-content">
-
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa
                         quam ad reiciendis cupiditate minus, accusantium magnam, nihil sed
@@ -67,8 +80,6 @@
                         quos dignissimos deserunt eaque quam omnis.
                     </p>
                 </div>
-
-
             </div>
 
             <div class="right-section">
@@ -88,9 +99,7 @@
         <div class="information"></div>
     </main>
 
-    <footer>
-
-    </footer>
+    <footer></footer>
 </body>
 
 </html>

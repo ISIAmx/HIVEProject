@@ -83,6 +83,7 @@ main {
 }
 
 footer {
+  margin-top: 600px;
   height: 50px;
   background-color: rgb(18, 69, 89);
 }

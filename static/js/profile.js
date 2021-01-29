@@ -16,15 +16,11 @@ function pressing_button(tableId) {
 function home_redirect() {
     console.log("Redireccionamineto a Home");
     $.ajax({
-        url: '/delete_account',
+        url: '/home_2',
         type: "GET",
         contentType: "application/json",
-        data: JSON.stringify({
-            id_admin: id_account
-        }),
         success: function () {
-            tble.row(tr.parents('tr')).remove().draw();
-            tble.ajax.reload();
+            console.log("Home");
         }
 
     });

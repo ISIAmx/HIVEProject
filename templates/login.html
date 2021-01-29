@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ingresar</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
 </head>
 
 <body>
@@ -20,7 +19,6 @@
                             class="nav-logo" />
                     </a>
                 </div>
-
                 <div class="home">
                     <form action="/" method="GET">
                         <button class="nav-btn" type="submit">REGRESAR</button>
@@ -50,6 +48,9 @@
     <footer>
 
     </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 
 </html>

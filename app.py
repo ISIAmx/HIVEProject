@@ -1,6 +1,6 @@
 from flask import Flask
 import flask
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from flask import request, json, jsonify
 from secrets import randbelow
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -55,12 +55,16 @@ def load_user(user_id):
     return usuarios.query.get(int(user_id))
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    if request.method == 'POST':
+        print("Home with profile options")
+        return render_template('home.html', profile=True)
+    else:
+        return render_template('home.html', profile=False)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@ app.route('/register', methods=['GET', 'POST'])
 def register():
     if flask.request.method == 'POST':
         json_data = request.get_json()
@@ -86,7 +90,7 @@ def register():
         return render_template('register.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@ app.route('/login', methods=['GET', 'POST'])
 def login():
 
     if flask.request.method == 'POST':
@@ -108,7 +112,7 @@ def login():
 
 
 @ app.route('/profile')
-@login_required
+@ login_required
 def profile():
     # Verifing if user is an admin
     user = admin.query.filter_by(account=current_user.username).first()
@@ -119,7 +123,7 @@ def profile():
 
 
 @ app.route('/profile_data')
-@login_required
+@ login_required
 def profile_dt():
     admin_schema = adminSchema(many=True)
     admin_table = admin.query.all()
@@ -129,7 +133,7 @@ def profile_dt():
 
 
 @ app.route('/delete_account', methods=['POST'])
-@login_required
+@ login_required
 def delete_account():
     if flask.request.method == 'POST':
         json_data = request.get_json()
@@ -141,7 +145,7 @@ def delete_account():
 
 
 @ app.route('/update_account_status', methods=['POST'])
-@login_required
+@ login_required
 def update_account():
     if flask.request.method == 'POST':
         json_data = request.get_json()
@@ -170,8 +174,8 @@ def update_account():
         return json.dumps({'success': True})  # Devuleve Json
 
 
-@app.route('/logout')
-@login_required
+@ app.route('/logout')
+@ login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
