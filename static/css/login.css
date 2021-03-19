@@ -30,6 +30,18 @@ body {
   margin: auto;
 }
 
+.home_redirect{
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.home_redirect .logo-button {
+  background: none;
+  border: none;
+  outline: none;
+}
+
 .home form button {
   margin: 20px;
   color: rgb(255, 255, 255);

@@ -3,6 +3,8 @@ $(function () {
     $('#btn-login').click(function () {
         user = $('#username').val();
         pwd = $('#password').val();
+        localStorage.setItem('username',user);
+        localStorage.setItem('password',pwd);
 
         $.ajax({
             url: '/login', //URL a la cual se enviará la peticion

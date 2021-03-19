@@ -1,9 +1,13 @@
-function enableAdminSection(name_section) {
-    document.getElementById(name_section).style.display = "block";
+let adminBtn = document.getElementById("admin-btn");
+if (adminBtn) {
+    adminBtn.onclick = function () {
+        showById('main-section');
+        hideById('upvote-options');
+        showById('admin-options');
+    }
 }
 
 function pressing_button(tableId) {
-
     if (document.getElementById(tableId).style.display == "block") {
         document.getElementById(tableId).style.display = "none";
     }
@@ -13,25 +17,13 @@ function pressing_button(tableId) {
 
 }
 
-function home_redirect() {
-    console.log("Redireccionamineto a Home");
-    $.ajax({
-        url: '/home_2',
-        type: "GET",
-        contentType: "application/json",
-        success: function () {
-            console.log("Home");
-        }
-
-    });
-}
-
 $(document).ready(function () {
+    console.log("Construyo la tabla");
     let done_btn = "<button class='button-status'><span class='material-icons'>done</span></button>";
     let clear_btn = "<button class='button-status'><span class='material-icons'>clear</span></button>";
     let delete_btn = "<button class='button-delete'><span class='material-icons'>delete</span></button>";
 
-
+   
     $('#table').DataTable({
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/es_es.json'
@@ -44,7 +36,7 @@ $(document).ready(function () {
         },
         "columns": [
 
-            { "data": "id_admin", "visible": false },
+            { "data": "id", "visible": false },
             { "data": "account" },
 
             {
@@ -177,7 +169,31 @@ $(document).ready(function () {
             }
         });
     });
-
+    /*
+        $('#curator-table').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/es_es.json'
+            },
+            "ajax": {
+                "url": "/profile_data",
+                "dataType": "json",
+                "dataSrc": "",
+                "contentType": "application/json"
+            },
+            "columns": [
+    
+                { "data": "id_curator", "visible": false },
+                { "data": "account" },
+                { "data": "account" },
+                { "data": "account" },
+                { "data": "account" },
+                { "data": "account" },
+                { "data": "undefined" },
+                { "data": "aundefined" },
+                { "data": "aundefined" },
+            ]
+        });
+    */
 });
 
 $(document).ready(function () {

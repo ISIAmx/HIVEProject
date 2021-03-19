@@ -4,18 +4,26 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylint = "*"
+autopep8 = "*"
+flake8 = "*"
 
 [packages]
-flask = "*"
-flask-mysql = "*"
+Flask = "*"
+Flask-MySQL = "*"
 werkzeug = "*"
-flask-login = "*"
-flask-sqlalchemy = "*"
+Flask-Login = "*"
 cryptography = "*"
-pylint = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
+hivepy = "*"
+Flask-SQLAlchemy = "*"
+pip = "*"
+install = "*"
+update = "*"
+sqlalchemy = "<1.3.23"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true

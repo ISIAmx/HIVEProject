@@ -14,10 +14,13 @@
         <div>
             <nav class="nav-main">
                 <div class="image-background">
-                    <a href="#">
-                        <img src="{{url_for('static', filename='img/logo.png')}}" alt="Curangel LOGO"
-                            class="nav-logo" />
-                    </a>
+                    <form action="/" method="GET" class="home_redirect">
+                        <button class="logo-button" type="submit">
+                            <img src="{{url_for('static', filename='img/logo.png')}}" alt="Curangel LOGO"
+                                class="nav-logo" />
+                        </button>
+
+                    </form>
                 </div>
 
                 <div class="home">

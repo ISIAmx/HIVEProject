@@ -1,0 +1,12 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.pythonPath": "/home/juanmora/.local/share/virtualenvs/HIVEProject-li9cvkP7/bin/python",
+    "python.linting.flake8Enabled": false,
+    "editor.rulers": [],
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint-flask",
+        "pylint-flask-sqlalchemy"
+    ]
+}

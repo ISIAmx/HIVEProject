@@ -29,7 +29,6 @@ document.getElementById('btn-register').onclick = function () {
 			errorMessage();
 		}
 	});
-
 }
 
 const errorMessage = () => {

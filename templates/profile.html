@@ -17,7 +17,7 @@
             <nav class="nav-main">
                 <div class="image-background">
                     <form action="/" method="POST" class="home_redirect">
-                        <button type="submit">
+                        <button class="logo-button" type="submit">
                             <img src="{{url_for('static', filename='img/logo.png')}}" alt="Curangel LOGO"
                                 class="nav-logo" />
                         </button>
@@ -36,13 +36,19 @@
                 <div class="option-buttons">
                     <div class="logout">
                         <form action="/logout" method="GET">
-                            <button class="nav-btn" type="submit">SALIR</button>
+                            <button href="#" class="nav-btn" type="submit">SALIR</button>
                         </form>
                     </div>
 
                     {% if admin_user == true %}
                     <div class="admin">
-                        <button class="nav-btn" onclick="enableAdminSection('main-section')">ADMIN</button>
+                        <a href="#" class="nav-btn" id="admin-btn">ADMIN</a>
+                    </div>
+                    {% endif %}
+
+                    {% if curator_user == true %}
+                    <div class="admin">
+                        <a href="#" class="nav-btn" id="curator-btn">UPVOTE</a>
                     </div>
                     {% endif %}
                 </div>
@@ -53,167 +59,214 @@
 
     <main>
         <div class="main-section" id="main-section">
-            <h3>Lorem ipsum dolor sit amet consectetur adipisicing </h3>
-            <div class="options-section" id="option1">
-                <button onclick="pressing_button('table1')">Administración</button>
-            </div>
-            <div class="table-content" id="table1">
-                <table id="table" class="admin-table" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Cuenta</th>
-                            <th>Curador</th>
-                            <th>Delegador</th>
-                            <th>Administrador</th>
-                            <th>Fecha de creación</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <section class="admin-options" id="admin-options">
+                <h3>Lorem ipsum dolor sit amet consectetur adipisicing </h3>
+                <div class="options-section" id="option2">
+                    <button onclick="pressing_button('table2')">Queue</button>
+                </div>
+                <div class="table-content" id="table2">
+                    <table id="tableD1" class="admin-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Cuenta</th>
+                                <th>Curador</th>
+                                <th>Delegador</th>
+                                <th>Administrador</th>
+                                <th>Creación</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tiger Nixon</td>
+                                <td>System Architect</td>
+                                <td>Edinburgh</td>
+                                <td>61</td>
+                                <td>2011/04/25</td>
+                                <td>$320,800</td>
+                            </tr>
+                            <tr>
+                                <td>Garrett Winters</td>
+                                <td>Accountant</td>
+                                <td>Tokyo</td>
+                                <td>63</td>
+                                <td>2011/07/25</td>
+                                <td>$170,750</td>
+                            </tr>
+                            <tr>
+                                <td>Ashton Cox</td>
+                                <td>Junior Technical Author</td>
+                                <td>San Francisco</td>
+                                <td>66</td>
+                                <td>2009/01/12</td>
+                                <td>$86,000</td>
+                            </tr>
 
-                </table>
-            </div>
-            <div class="options-section" id="option2">
-                <button onclick="pressing_button('table2')">Opción 2</button>
-            </div>
-            <div class="table-content" id="table2">
-                <table id="tableD1" class="admin-table" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Cuenta</th>
-                            <th>Curador</th>
-                            <th>Delegador</th>
-                            <th>Administrador</th>
-                            <th>Creación</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td>Tokyo</td>
-                            <td>63</td>
-                            <td>2011/07/25</td>
-                            <td>$170,750</td>
-                        </tr>
-                        <tr>
-                            <td>Ashton Cox</td>
-                            <td>Junior Technical Author</td>
-                            <td>San Francisco</td>
-                            <td>66</td>
-                            <td>2009/01/12</td>
-                            <td>$86,000</td>
-                        </tr>
+                    </table>
+                </div>
+                <div class="options-section" id="option1">
+                    <button onclick="pressing_button('table1')">Users</button>
+                </div>
+                <div class="table-content" id="table1">
+                    <table id="table" class="admin-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Cuenta</th>
+                                <th>Curador</th>
+                                <th>Delegador</th>
+                                <th>Administrador</th>
+                                <th>Fecha de creación</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                </table>
-            </div>
-            <div class="options-section" id="option3">
-                <button onclick="pressing_button('table3')">Opción 3</button>
-            </div>
-            <div class="table-content" id="table3">
-                <table id="table" class="admin-table" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Cuenta</th>
-                            <th>Curador</th>
-                            <th>Delegador</th>
-                            <th>Administrador</th>
-                            <th>Creación</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td>Tokyo</td>
-                            <td>63</td>
-                            <td>2011/07/25</td>
-                            <td>$170,750</td>
-                        </tr>
-                        <tr>
-                            <td>Ashton Cox</td>
-                            <td>Junior Technical Author</td>
-                            <td>San Francisco</td>
-                            <td>66</td>
-                            <td>2009/01/12</td>
-                            <td>$86,000</td>
-                        </tr>
-                </table>
-            </div>
-            <div class="options-section" id="option4">
-                <button onclick="pressing_button('table4')">Opción 4</button>
-            </div>
-            <div class="table-content" id="table4">
-                <table id="table" class="admin-table" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Cuenta</th>
-                            <th>Curador</th>
-                            <th>Delegador</th>
-                            <th>Administrador</th>
-                            <th>Creación</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td>Tokyo</td>
-                            <td>63</td>
-                            <td>2011/07/25</td>
-                            <td>$170,750</td>
-                        </tr>
-                        <tr>
-                            <td>Ashton Cox</td>
-                            <td>Junior Technical Author</td>
-                            <td>San Francisco</td>
-                            <td>66</td>
-                            <td>2009/01/12</td>
-                            <td>$86,000</td>
-                        </tr>
-                </table>
-            </div>
+                    </table>
+                </div>
+
+                <div class="options-section" id="option3">
+                    <button onclick="pressing_button('table3')">Blacklist</button>
+                </div>
+                <div class="table-content" id="table3">
+                    <table id="table" class="admin-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Cuenta</th>
+                                <th>Curador</th>
+                                <th>Delegador</th>
+                                <th>Administrador</th>
+                                <th>Creación</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tiger Nixon</td>
+                                <td>System Architect</td>
+                                <td>Edinburgh</td>
+                                <td>61</td>
+                                <td>2011/04/25</td>
+                                <td>$320,800</td>
+                            </tr>
+                            <tr>
+                                <td>Garrett Winters</td>
+                                <td>Accountant</td>
+                                <td>Tokyo</td>
+                                <td>63</td>
+                                <td>2011/07/25</td>
+                                <td>$170,750</td>
+                            </tr>
+                            <tr>
+                                <td>Ashton Cox</td>
+                                <td>Junior Technical Author</td>
+                                <td>San Francisco</td>
+                                <td>66</td>
+                                <td>2009/01/12</td>
+                                <td>$86,000</td>
+                            </tr>
+                    </table>
+                </div>
+                <div class="options-section" id="option4">
+                    <button onclick="pressing_button('table4')">Downvotes</button>
+                </div>
+                <div class="table-content" id="table4">
+                    <table id="table" class="admin-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Cuenta</th>
+                                <th>Curador</th>
+                                <th>Delegador</th>
+                                <th>Administrador</th>
+                                <th>Creación</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tiger Nixon</td>
+                                <td>System Architect</td>
+                                <td>Edinburgh</td>
+                                <td>61</td>
+                                <td>2011/04/25</td>
+                                <td>$320,800</td>
+                            </tr>
+                            <tr>
+                                <td>Garrett Winters</td>
+                                <td>Accountant</td>
+                                <td>Tokyo</td>
+                                <td>63</td>
+                                <td>2011/07/25</td>
+                                <td>$170,750</td>
+                            </tr>
+                            <tr>
+                                <td>Ashton Cox</td>
+                                <td>Junior Technical Author</td>
+                                <td>San Francisco</td>
+                                <td>66</td>
+                                <td>2009/01/12</td>
+                                <td>$86,000</td>
+                            </tr>
+                    </table>
+                </div>
+            </section>
+
+            <!--/upvote-->
+            <section class="upvote-options" id="upvote-options">
+                <div class="container">
+                    <div>
+                        <h2>Suggest a post or comment to upvote </h2>
+                        <form id="upvoteForm">
+                            <div class="form-group">
+                                <input type="text" id="newUpvote" class="form-control"
+                                    placeholder="full link to post or comment" />
+                            </div>
+                            <button class="btn-upvote-form" id="sendNewUpvote">Send</button>
+                            <button class="btn-upvote-form" id="sendingUpvote">Sending...</button>
+                            <button class="btn-upvote-form" id="checkMana">Check Mana</button>
+                        </form>
+                    </div>
+                    <br />
+
+                    <div class="options-section" id="option2">
+                        <button onclick="pressing_button('curator-table')">Queue</button>
+                    </div>
+
+                    <div class="table-content" id="curator-table">
+                        <h2>History of your suggestions</h2>
+                        <table id="table-upvote" class="admin-table" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>User</th>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>Payout</th>
+                                    <th>Status</th>
+                                    <th>Reward</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="upvotesTableBody">
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <!--/upvote-->
         </div>
-
     </main>
 
     <footer>
 
     </footer>
+    <script src="{{ url_for('static', filename='js/helpers.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
     <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/upvote.js') }}"></script>
 
 </body>
 
