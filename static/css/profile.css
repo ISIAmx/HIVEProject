@@ -105,7 +105,7 @@ main h3 {
 }
 
 .main-section {
-  width: 70%;
+  width: 70px;
   margin: auto;
   display: none;
 }
@@ -188,8 +188,21 @@ main h3 {
   display: none;
 }
 
+/* LINK PROPERTIES*/
+a{
+  text-decoration: none;
+}
+
+a:link{
+  color: purple;
+}
+
+a:hover{
+  color: blue;
+}
 
 /*UPVOTE SECTION*/
+
 
 footer {
   height: 50px;

@@ -13,6 +13,8 @@ from hive.hive import Hive
 from hive.blockchain import Blockchain
 from lib import api
 from lib import errorHandler
+from sqlalchemy.sql import func
+
 
 app = Flask(__name__)
 app.config.from_object('config.DevConfig')  # Configuracion Desarrollador
@@ -25,7 +27,7 @@ class users(UserMixin, db.Model):
     account = db.Column(db.String(100), nullable=False)
     hash = db.Column(db.String(200), nullable=False)
     ip = db.Column(db.String(20), nullable=False)
-    created = db.Column(db.Date, default=date.today(), nullable=False)
+    created = db.Column(db.DateTime, server_default=func.now(), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
     curator = db.Column(db.Boolean, nullable=False, default=False)
 
@@ -33,16 +35,16 @@ class users(UserMixin, db.Model):
 class upvotes(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     account = db.Column(db.String(100), nullable=False)
-    created = db.Column(db.Date, default=date.today(), nullable=False)
+    created = db.Column(db.DateTime, server_default=func.now(), nullable=False)
     link = db.Column(db.String(200), nullable=False)
     user = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     slug = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(20), nullable=False)
-    payout = db.Column(db.Date, nullable=False)
+    payout = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), nullable=False)
-    vote_time = db.Column(db.Date, nullable=True)
+    vote_time = db.Column(db.DateTime, nullable=True)
     reward_sbd = db.Column(db.String(20), nullable=False)
     reward_sp = db.Column(db.String(20), nullable=False)
 
@@ -251,19 +253,20 @@ def upvote():
         else:
             link = postlink.split('/')
         post = client.get_content(link[-2][1:], link[-1])
+        print(post)
 
         # check if curator is author himself
         if post['author'] == username:
-            errorHandler.throwError('Curating your own post? Are you serious?')
+            return errorHandler.throwError('Curating your own post? Are you serious?')
 
         # check if curator is author himself
         if post['author'] == 'curangel':
-            errorHandler.throwError('We do not vote for ourselves :D')
+            return errorHandler.throwError('We do not vote for ourselves :D')
 
         # check if already voted
         for vote in post['active_votes']:
             if vote['voter'] == 'curangel':
-                errorHandler.throwError('We already voted on that post.')
+                return errorHandler.throwError('We already voted on that post.')
 
         # check if exists in upvote queue
         upvotes_schema = upvotesSchema()
@@ -272,7 +275,7 @@ def upvote():
         result = upvotes_schema.dump(result)
 
         if len(result) > 0:
-            errorHandler.throwError(
+            return errorHandler.throwError(
                 'This post has been submitted before. Will not add to queue again.')
 
         post_type = 1

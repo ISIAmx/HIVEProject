@@ -35,6 +35,7 @@ document.getElementById('sendNewUpvote').onclick = function () {
     console.log(localStorage.getItem('username'));
     $.ajax({
         url: "/upvote",
+        dataType: "json",
         data: {
             postlink: getValueById('newUpvote'),
             username: localStorage.getItem('username')
@@ -73,7 +74,7 @@ function loadUpvotesTable(data) {
 
         //Date
         let newcolumn = document.createElement('td');
-        let newcontent = document.createTextNode(value.created);
+        let newcontent = document.createTextNode((value.created).replace("T", " "));
         newcolumn.appendChild(newcontent);
         newrow.appendChild(newcolumn);
 
@@ -113,7 +114,7 @@ function loadUpvotesTable(data) {
 
         // Payout
         newcolumn = document.createElement('td');
-        newcontent = document.createTextNode(value.payout);
+        newcontent = document.createTextNode((value.payout).replace("T", " "));
         newcolumn.appendChild(newcontent);
         newrow.appendChild(newcolumn);
 

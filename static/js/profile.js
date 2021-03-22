@@ -23,7 +23,7 @@ $(document).ready(function () {
     let clear_btn = "<button class='button-status'><span class='material-icons'>clear</span></button>";
     let delete_btn = "<button class='button-delete'><span class='material-icons'>delete</span></button>";
 
-   
+
     $('#table').DataTable({
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/es_es.json'
@@ -66,7 +66,11 @@ $(document).ready(function () {
                 },
                 "className": "admin-class"
             },
-            { "data": "created" },
+            {
+                "data": function (data) {
+                    return (data.created).replace("T", " ");
+                }
+            },
             { "defaultContent": delete_btn },
 
         ]

@@ -10,7 +10,7 @@ flake8 = "*"
 [packages]
 Flask = "*"
 Flask-MySQL = "*"
-werkzeug = "*"
+Werkzeug = "*"
 Flask-Login = "*"
 cryptography = "*"
 marshmallow-sqlalchemy = "*"
@@ -20,7 +20,7 @@ Flask-SQLAlchemy = "*"
 pip = "*"
 install = "*"
 update = "*"
-sqlalchemy = "<1.3.23"
+SQLAlchemy = "<1.3.23"
 
 [requires]
 python_version = "3.8"
