@@ -1,3 +1,4 @@
+
 function hideById(id) {
     document.getElementById(id).style.display = "none";
 }
@@ -24,4 +25,14 @@ function setContentById(id, content) {
 
 function getValueById(id) {
     return document.getElementById(id).value;
+}
+
+function hideShowContent(tableId) {
+    if (document.getElementById(tableId).style.display == "block") {
+        document.getElementById(tableId).style.display = "none";
+    }
+    else {
+        document.getElementById(tableId).style.display = "block";
+    }
+
 }

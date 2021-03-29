@@ -111,7 +111,7 @@ def register():
             status = 'Bien! Usuario Existente'
             return json.dumps({'status': status})  # Devuleve Json
         else:
-            # Inserta nuevo usuario
+            # Insert new user
             new_user = users(account=username, hash=generate_password_hash(
                 password, method='sha256'), ip=userip)
             db.session.add(new_user)
@@ -128,11 +128,11 @@ def login():
     if flask.request.method == 'POST':
         json_data = request.get_json()
         username = json_data['username']
-        password = json_data['password']
+        userhash = json_data['userhash']
 
         user = users.query.filter_by(account=username).first()
 
-        if not user or not check_password_hash(user.hash, password):
+        if not user or not check_password_hash(user.hash, userhash):
             status = '2'
             return json.dumps({'status': status})  # Devuleve Json
         else:
@@ -146,7 +146,7 @@ def login():
 @ app.route('/profile')
 @ login_required
 def profile():
-    # user is an admin
+    # check if user is an admin
     user = users.query.filter_by(account=current_user.account).first()
 
     if(user != None):
@@ -170,11 +170,11 @@ def profile_dt():
 def delete_account():
     if flask.request.method == 'POST':
         json_data = request.get_json()
-        id = json_data["id_admin"]
-        admin_account = admin.query.filter_by(id_admin=id).one()
-        db.session.delete(admin_account)
+        id = json_data["id"]
+        user_account = users.query.filter_by(id=id).one()
+        db.session.delete(user_account)
         db.session.commit()
-    return json.dumps({'success': True})  # Devuleve Json
+    return json.dumps({'success': True})
 
 
 @ app.route('/update_account_status', methods=['POST'])
@@ -215,6 +215,62 @@ def logout():
     return redirect(url_for('home'))
 
 
+@app.route('/admin', methods=['POST'])
+@login_required
+def admin():
+    hived_nodes = [
+        'https://api.pharesim.me',
+        'https://anyx.io',
+        'https://api.hive.blog',
+        'https://api.openhive.network',
+    ]
+    client = Hive(nodes=hived_nodes)
+    # output variable
+    data = {}
+    # get and set variables
+    username = None
+    userhash = None
+    deleteuv = None
+
+    if 'username' in request.form:
+        username = request.form['username']
+    if 'userhash' in request.form:
+        userhash = request.form['userhash']
+    if 'deleteupvote' in request.form:
+        deleteuv = request.form['deleteupvote']
+
+    # check permissions
+    users_schema = usersSchema()
+    result = users.query.filter_by(account=username).first()
+    result = users_schema.dump(result)
+
+    if result['admin'] != True:
+        return errorHandler.throwError('No permission')
+
+    if deleteuv:
+        upvotes_schema = upvotesSchema()
+        result = upvotes.query.filter_by(id=deleteuv).first()
+        result = upvotes_schema.dump(result)
+        print(result)
+        print("Antes de eliminacion")
+        if result['status'] == 'in queue':
+            print("Durante eliminacion")
+            upvotes.query.filter_by(id=deleteuv).delete()
+            db.session.commit()
+            data['status'] = 'success'
+            return data
+        else:
+            return errorHandler.throwError(
+                'Only posts in queue can be removed from the queue. Duh!')
+    else:
+        # get upvotes
+        upvotes_schema = upvotesSchema(many=True)
+        upvote_table = upvotes.query.filter_by().order_by(upvotes.created.desc())
+        dataJson = upvotes_schema.dump(upvote_table)
+        data['upvotes'] = dataJson
+        return data
+
+
 @app.route('/upvote', methods=['POST'])
 @login_required
 def upvote():
@@ -232,110 +288,95 @@ def upvote():
     # output variable
     data = {}
 
+    username = None
+    userhash = None
     postlink = None
+    deleteuv = None
+
+    if 'username' in request.form:
+        username = request.form['username']
+    if 'deleteupvote' in request.form:
+        deleteuv = request.form['deleteupvote']
+    if 'postlink' in request.form:
+        postlink = request.form['postlink']
+
     # check permissions
-    username = request.form['username']
     users_schema = usersSchema()
     result = users.query.filter_by(account=username).first()
     result = users_schema.dump(result)
 
     if result['curator'] != True:
-        errorHandler.throwError('No permission')
+        return errorHandler.throwError('No permission')
 
-    if 'postlink' in request.form:
-        postlink = request.form['postlink']
-
-    # submit new post
-    if postlink:
-        link = postlink.split('#')
-        if len(link) > 1:
-            link = link[1].split('/')
-        else:
-            link = postlink.split('/')
-        post = client.get_content(link[-2][1:], link[-1])
-        print(post)
-
-        # check if curator is author himself
-        if post['author'] == username:
-            return errorHandler.throwError('Curating your own post? Are you serious?')
-
-        # check if curator is author himself
-        if post['author'] == 'curangel':
-            return errorHandler.throwError('We do not vote for ourselves :D')
-
-        # check if already voted
-        for vote in post['active_votes']:
-            if vote['voter'] == 'curangel':
-                return errorHandler.throwError('We already voted on that post.')
-
-        # check if exists in upvote queue
+    # delete post
+    if deleteuv:
         upvotes_schema = upvotesSchema()
-        result = upvotes.query.filter_by(
-            account=username, user=post['author'], slug=post['permlink']).first()
-        result = upvotes_schema.dump(result)
+        posts = upvotes.query.filter_by(
+            account=username, id=deleteuv).first()
+        result = upvotes_schema.dump(posts)
 
-        if len(result) > 0:
-            return errorHandler.throwError(
-                'This post has been submitted before. Will not add to queue again.')
-
-        post_type = 1
-        if post['parent_author']:
-            post_type = 2
-
-        # insert upvote
-        new_upvote = upvotes(account=username, link=post['url'], user=post['author'],
-                             category=post['category'], slug=post['permlink'], title=post['title'], type=post_type, payout=post['cashout_time'], status='in queue', reward_sbd=0, reward_sp=0)
-        db.session.add(new_upvote)
+        if len(result) < 1:
+            return errorHandler.throwError('Upvote not found!')
+        db.session.query(upvotes).filter(
+            upvotes.id == deleteuv).update({'status': 'canceled'})
         db.session.commit()
-
-    # get upvotes
-    upvotes_schema = upvotesSchema(many=True)
-    upvote_table = upvotes.query.all()
-    dataJson = upvotes_schema.dump(upvote_table)
-
-    # dataJson = jsonify(dataJson)
-    data['upvotes'] = dataJson
-    api.output(data)
-    return data
-
-
-'''
-def existe_usuario(username, pwd):
-    usuarios = query_users(conn)
-
-    if usuarios == []:
-        return False
+        data['status'] = 'success'
+        return data
     else:
-        for usr in usuarios:
-            if (username == usr['user']) or (check_password_hash(usr['password'], pwd)):
-                return True
+        # submit new post
+        if postlink:
+            link = postlink.split('#')
+            if len(link) > 1:
+                link = link[1].split('/')
+            else:
+                link = postlink.split('/')
+            post = client.get_content(link[-2][1:], link[-1])
+            print(post)
 
-        return False
+            # check if curator is author himself
+            if post['author'] == username:
+                return errorHandler.throwError('Curating your own post? Are you serious?')
 
+            # check if curator is author himself
+            if post['author'] == 'curangel':
+                return errorHandler.throwError('We do not vote for ourselves :D')
 
-def consultar_id():
-    while True:
-        id = randbelow(10000)
-        usuarios = query_users(conn)
-        if usuarios == []:
-            return id
-        else:
-            for usr in usuarios:
-                if id != usr['id']:
-                    return id
+            # check if already voted
+            for vote in post['active_votes']:
+                if vote['voter'] == 'curangel':
+                    return errorHandler.throwError('We already voted on that post.')
 
+            # check if exists in upvote queue
+            upvotes_schema = upvotesSchema()
+            result = upvotes.query.filter_by(
+                account=username, user=post['author'], slug=post['permlink']).first()
+            result = upvotes_schema.dump(result)
 
-@ app.route('/delete_user', methods=['POST'])
-def borrar_usuarios():
+            if len(result) > 0:
+                return errorHandler.throwError(
+                    'This post has been submitted before. Will not add to queue again.')
 
-    json_data = request.get_json()
-    id_borrar = json_data["id"]
+            post_type = 1
+            if post['parent_author']:
+                post_type = 2
 
-    delete_user(conn, id_borrar)
-    status = "Usuario Eliminado de Base de Datos"
-    return json.dumps({'status': status})  # Devuleve Json
+            # insert upvote
+            new_upvote = upvotes(account=username, link=post['url'], user=post['author'],
+                                 category=post['category'], slug=post['permlink'], title=post['title'], type=post_type, payout=post['cashout_time'], status='in queue', reward_sbd=0, reward_sp=0)
+            db.session.add(new_upvote)
+            db.session.commit()
 
-'''
+        # get upvotes
+        upvotes_schema = upvotesSchema(many=True)
+        upvote_table = upvotes.query.filter_by(
+            account=username).order_by(upvotes.created.desc())
+        dataJson = upvotes_schema.dump(upvote_table)
+
+        # dataJson = jsonify(dataJson)
+        data['upvotes'] = dataJson
+        api.output(data)
+        return data
+
 
 if __name__ == '__main__':
     app.run(debug=True)

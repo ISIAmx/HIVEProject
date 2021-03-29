@@ -9,7 +9,7 @@ body {
   background-color: rgb(235, 235, 235);
 }
 
-/*    NAVIGATION        */
+/*NAVIGATION*/
 .nav-main {
   background-color: none;
   font-size: 15px;
@@ -91,34 +91,38 @@ body {
   width: 60px;
   margin: auto;
 }
+/*NAVIGATION*/
 
-/*    NAVIGATION        */
 
-main {
+/*ADMIN-SECTION*/
+
+.admin-section {
   font-size: 15px;
-}
-
-main h3 {
-  text-align: center;
-  margin-top: 50px;
-  margin-bottom: 20px;
-}
-
-.main-section {
-  width: 70px;
+  text-align: left;
+  width: 60%;
   margin: auto;
   display: none;
+  margin-top: 100px;
 }
 
-.options-section {
+.admin-menu{
+  margin-top: 20px;
+}
+.admin-card {
   text-align: center;
-  display: flex;
-  justify-content: center;
-  border-style: groove;
-  border-width: 0.5px;
+  border-radius: 10px;
 }
 
-.options-section button {
+.card-header button{
+  text-align: left;
+  text-indent: 20px;
+}
+
+.card-header:hover {
+  opacity: 0.8;
+}
+
+.card-header button {
   font-weight: bolder;
   width: 100%;
   height: 50px;
@@ -128,16 +132,13 @@ main h3 {
   outline: none;
 }
 
-.options-section:hover {
-  opacity: 0.8;
-}
-
-.table-content {
+.content-card {
   display: none;
+  margin: 20px 40px;
 }
 
-.admin-table {
-  margin: 15px;
+.content-table{
+  width:80%;
 }
 
 .button-delete,
@@ -150,14 +151,17 @@ main h3 {
 .button-delete:hover {
   opacity: 0.5;
 }
-
+/*ADMIN-SECTION*/
 
 /*UPVOTE SECTION*/
-.upvote-options .container{
-  width:80%;
+
+
+.upvote-section{
+  display: none;
+  width:60%;
   margin: auto;
   text-align: left;
-  padding-top: 100px;
+  margin-top: 100px;
 }
 
 .form-group .form-control{
@@ -165,7 +169,7 @@ main h3 {
   height: 30px;
   border-radius: 3px;
   border: none;
-  margin-top: 20px;
+  margin-top: 5px;
   margin-bottom: 20px;
   outline: none;
 }
@@ -188,7 +192,23 @@ main h3 {
   display: none;
 }
 
-/* LINK PROPERTIES*/
+.upvote-content-card{
+  font-size: 15px;
+  text-align: center;
+}
+
+
+.upvote-table{
+  width: 80%;
+  margin: auto;
+}
+
+.upvote-options h2{
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+/* link properties*/
 a{
   text-decoration: none;
 }
@@ -202,6 +222,11 @@ a:hover{
 }
 
 /*UPVOTE SECTION*/
+
+/*TABLE STYLES*/
+.align-field{
+  text-align: left;
+}
 
 
 footer {

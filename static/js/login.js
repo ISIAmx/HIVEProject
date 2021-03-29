@@ -1,10 +1,10 @@
 
 $(function () {
     $('#btn-login').click(function () {
-        user = $('#username').val();
-        pwd = $('#password').val();
-        localStorage.setItem('username',user);
-        localStorage.setItem('password',pwd);
+        username = $('#username').val();
+        userhash = $('#password').val();
+        localStorage.setItem('username', username);
+        localStorage.setItem('userhash', userhash);
 
         $.ajax({
             url: '/login', //URL a la cual se enviará la peticion
@@ -12,8 +12,8 @@ $(function () {
             dataType: "json", //Se esperan datos Json del servidor
             contentType: "application/json",
             data: JSON.stringify({
-                username: user,
-                password: pwd
+                username: username,
+                userhash: userhash
             }),
             success: function (data) {
                 if (data.status == 1) {
