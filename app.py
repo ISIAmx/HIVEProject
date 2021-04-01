@@ -11,10 +11,10 @@ from flask_marshmallow import Marshmallow
 from marshmallow import Schema
 from hive.hive import Hive
 from hive.blockchain import Blockchain
+from hive.account import Account
 from lib import api
 from lib import errorHandler
 from sqlalchemy.sql import func
-
 
 app = Flask(__name__)
 app.config.from_object('config.DevConfig')  # Configuracion Desarrollador
@@ -49,14 +49,21 @@ class upvotes(UserMixin, db.Model):
     reward_sp = db.Column(db.String(20), nullable=False)
 
 
-class test(UserMixin, db.Model):
+class downvotes(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(50), nullable=False)
+    account = db.Column(db.String(100), nullable=False)
+    created = db.Column(db.DateTime, server_default=func.now(), nullable=False)
+    reason = db.Column(db.String(100), nullable=False)
+    link = db.Column(db.String(200), nullable=False)
+    user = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    slug = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=False)
-    created = db.Column(db.Date, nullable=False)
-    last_update = db.Column(db.Date, nullable=False)
-    net_votes = db.Column(db.Integer, nullable=False)
-    pending_pv = db.Column(db.String(50), nullable=False)
+    type = db.Column(db.Integer, nullable=False)
+    payout = db.Column(db.DateTime, nullable=False)
+    reward = db.Column(db.Integer, nullable=False)
+    maxi = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(20), nullable=False)
 
 
 class usersSchema(ma.Schema):
@@ -64,16 +71,16 @@ class usersSchema(ma.Schema):
         fields = ('id', 'account', 'hash', 'ip', 'created', 'admin', 'curator')
 
 
-class testSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'author', 'title', 'created',
-                  'last_update', 'net_votes', 'pending_pv')
-
-
 class upvotesSchema(ma.Schema):
     class Meta:
         fields = ('id', 'account', 'created', 'link',
                   'user', 'category', 'slug', 'title', 'type', 'payout', 'status', 'vote_time', 'reward_sbd', 'reward_sp')
+
+
+class downvotesSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'account', 'created', 'reason', 'link',
+                  'user', 'category', 'slug', 'title', 'type', 'payout', 'reward', 'maxi', 'status')
 
 
 # Para usar Flask-login
@@ -251,10 +258,7 @@ def admin():
         upvotes_schema = upvotesSchema()
         result = upvotes.query.filter_by(id=deleteuv).first()
         result = upvotes_schema.dump(result)
-        print(result)
-        print("Antes de eliminacion")
         if result['status'] == 'in queue':
-            print("Durante eliminacion")
             upvotes.query.filter_by(id=deleteuv).delete()
             db.session.commit()
             data['status'] = 'success'
@@ -263,11 +267,199 @@ def admin():
             return errorHandler.throwError(
                 'Only posts in queue can be removed from the queue. Duh!')
     else:
-        # get upvotes
         upvotes_schema = upvotesSchema(many=True)
         upvote_table = upvotes.query.filter_by().order_by(upvotes.created.desc())
         dataJson = upvotes_schema.dump(upvote_table)
         data['upvotes'] = dataJson
+
+        # check if posts have been voted by us
+        i = 0
+        for dic in data['upvotes']:
+            for key in data['upvotes'][i]:
+                if key == 'link':
+                    if(was_voted_post(data['upvotes'][i][key])):
+                        print("This post has been voted")
+                        upvotes_schema = upvotesSchema()
+                        upvotes.query.filter_by(
+                            id=data['upvotes'][i]['id']).delete()
+                        db.session.commit()
+                    else:
+                        print("This post hasn't been voted")
+                        print(data['upvotes'][i]['id'])
+            i = i+1
+
+        # get upvotes
+        upvotes_schema = upvotesSchema(many=True)
+        upvote_table = upvotes.query.filter_by().order_by(upvotes.created.desc())
+        data['upvotes'] = upvotes_schema.dump(upvote_table)
+
+        # get downvotes
+        downvotes_schema = downvotesSchema(many=True)
+        downvote_table = downvotes.query.filter_by().order_by(downvotes.created.desc())
+        data['downvotes'] = downvotes_schema.dump(downvote_table)
+        return data
+
+
+def was_voted_post(post_link):
+    hived_nodes = [
+        'https://api.pharesim.me',
+        'https://anyx.io',
+        'https://api.hive.blog',
+        'https://api.openhive.network',
+    ]
+
+    user = "moo-cow"
+    key = "5Jkmw272v8mF21RCWG6KveFyKJdXTsCc8w19uYgzLkmAUJB1XhE"
+    client = Hive(keys=[key], nodes=hived_nodes)
+    link = post_link.split('/')
+    post = client.get_content(link[-2][1:], link[-1])
+
+    # check if already voted
+    for vote in post['active_votes']:
+        if vote['voter'] == 'terminado':
+            return True
+    return False
+
+
+@app.route('/downvote', methods=['GET', 'POST'])
+@login_required
+def downvote():
+    hived_nodes = [
+        'https://api.pharesim.me',
+        'https://anyx.io',
+        'https://api.hive.blog',
+        'https://api.openhive.network',
+    ]
+    client = Hive(nodes=hived_nodes)
+    chain = Blockchain(client)
+
+    # whitelist
+    whitelist = [
+        'pharesim', 'azircon', 'nikv', 'tazi', 'galenkp', 'joshmania', 'lemony-cricket'
+    ]
+
+    # output variable
+    data = {}
+
+    # get and set variables
+    username = None
+    userhash = None
+    postlink = None
+    limit = None
+    reason = None
+    deletedv = None
+    if 'username' in request.form:
+        username = request.form['username']
+    if 'userhash' in request.form:
+        userhash = request.form['userhash']
+    if 'postlink' in request.form:
+        postlink = request.form['postlink']
+    if 'limit' in request.form:
+        limit = request.form['limit']
+    if 'reason' in request.form:
+        reason = request.form['reason']
+    if 'deletedownvote' in request.form:
+        deletedv = request.form['deletedownvote']
+    print(username, userhash)
+    # check permissions
+    users_schema = usersSchema()
+    result = users.query.filter_by(account=username, hash=userhash).first()
+    result = users_schema.dump(result)
+    delegator = 0
+    delegations = client.get_vesting_delegations(username, 'curangel', 1)
+
+    if len(delegations) > 0 and delegations[0]['delegatee'] == 'curangel':
+        delegator = 1
+    print(delegations, delegator)
+    if len(result) < 1 or delegator == 0:
+        return errorHandler.throwError('No permission')
+
+    if limit:
+        limit = int(limit)
+
+    if deletedv:
+        # post = db.select('downvotes',['status'],{'account':username,'id':deletedv},'status')
+        # if len(results) < 1:
+        #     errorHandler.throwError('Downvote not found!')
+        # db.delete('downvotes',{'id':deletedv})
+        # data['status'] = 'success'
+        print("Delete Downvote")
+    else:
+        # submit new post
+        if postlink:
+            link = postlink.split('#')
+            if len(link) > 1:
+                link = link[1].split('/')
+            else:
+                link = postlink.split('/')
+            post = client.get_content(link[-2][1:], link[-1])
+            # check if reason was given
+            if not reason:
+                return errorHandler.throwError(
+                    'You need to give a reason for the downvote.')
+            # check whitelist
+            # if username not in whitelist:
+            #    errorHandler.throwError(
+            #        'To use this tool, please apply in our Discord!')
+            # check if user has more than the limit of posts waiting
+            #       result = db.select('downvotes',['id'],{'account':username,'status':'wait'},'id')
+            #       if len(result) > 2:
+            #           errorHandler.throwError('You already have '+len(result)+' posts waiting to be downvoted. Please wait until those are processed.')
+
+            # check if post is in upvote queue
+            upvotes_schema = upvotesSchema()
+            result = upvotes.query.filter_by(slug=post['permlink']).first()
+            result = upvotes_schema.dump(result)
+
+            if len(result) > 0:
+                return errorHandler.throwError(
+                    'Post was already curated by '+result[0]['account'])
+
+            # check if already voted
+            for vote in post['active_votes']:
+                if vote['voter'] == 'curangel':
+                    return errorHandler.throwError('We already voted on that post.')
+
+            # check if user added that post already
+            downvotes_schema = downvotesSchema()
+            result = downvotes.query.filter_by(
+                account=username, link=post['url'], status='wait').first()
+            result = upvotes_schema.dump(result)
+            if len(result) > 0:
+                return errorHandler.throwError(
+                    'You already added this post. Re-adding it would not change anything. If you want to maximize your power on this post, do not add others in this round.')
+
+            # check cashout time
+            # cashoutts = time.mktime(datetime.datetime.strptime(
+            #    post['cashout_time'], "%Y-%m-%dT%H:%M:%S").timetuple())
+            # chaints = time.mktime(datetime.datetime.strptime(
+            #    chain.info()['time'], "%Y-%m-%dT%H:%M:%S").timetuple())
+            # if cashoutts - chaints < 60*60*24:
+            #    errorHandler.throwError(
+            #        'Cashout of post in less than 24 hours. Will not add to queue.')
+
+            # check if limit is valid
+            # if limit < 10 or limit > 99:
+            #    errorHandler.throwError('Invalid limit for downvote weight.')
+            # targetreward = round(
+            #    float(post['pending_payout_value'][:-4]) * (100-limit) / 100, 3)
+            post_type = 1
+            if post['parent_author']:
+                post_type = 2
+
+            new_downvote = upvotes(account=username, reason=reason, link=post['url'], user=post['author'],
+                                   category=post['category'], slug=post['permlink'], title=post['title'], type=post_type, payout=post['cashout_time'], status='wait', reward=post['pending_payout_value'], maxi=targetreward)
+            db.session.add(new_downvote)
+            db.session.commit()
+
+        # get downvotes
+        downvotes_schema = downvotesSchema(many=True)
+        downvote_table = downvotes.query.filter_by(
+            account=username).order_by(downvotes.created.desc())
+        dataJson = downvotes_schema.dump(downvote_table)
+
+        data['downvote'] = dataJson
+        api.output(data)
         return data
 
 
@@ -317,8 +509,11 @@ def upvote():
 
         if len(result) < 1:
             return errorHandler.throwError('Upvote not found!')
-        db.session.query(upvotes).filter(
-            upvotes.id == deleteuv).update({'status': 'canceled'})
+
+        # db.session.query(upvotes).filter(
+        #    upvotes.id == deleteuv).update({'status': 'canceled'})
+        # db.session.commit()
+        upvotes.query.filter_by(id=deleteuv).delete()
         db.session.commit()
         data['status'] = 'success'
         return data
@@ -331,7 +526,6 @@ def upvote():
             else:
                 link = postlink.split('/')
             post = client.get_content(link[-2][1:], link[-1])
-            print(post)
 
             # check if curator is author himself
             if post['author'] == username:

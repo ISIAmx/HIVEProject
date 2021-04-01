@@ -49,11 +49,19 @@
                         <a href="#" class="nav-btn" id="curator-btn">UPVOTE</a>
                     </div>
                     {% endif %}
+
+                    <div class="admin">
+                        <a href="#" class="nav-btn" id="downvote-btn">DOWNVOTE</a>
+                    </div>
                 </div>
 
             </nav>
         </div>
     </div>
+
+    <!--downvote-->
+    
+    <!--/downvote-->
 
     <main class="admin-section" id="admin">
         <h1>Curangel Administration Interface</h1>
@@ -134,7 +142,7 @@
                     <button onclick="hideShowContent('cardContent4')">Downvotes</button>
                 </div>
                 <div class="content-card" id="cardContent4">
-                    <table class="content-table" id="downvotesTable" style="width:100%">
+                    <table class="content-table" id="adminDownvotesTable" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -148,7 +156,7 @@
                                 <th>Delete</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="adminDownvotesTableBody">
                     </table>
                 </div>
             </section>
@@ -184,7 +192,9 @@
                                 <th>Title</th>
                                 <th>Type</th>
                                 <th>Payout</th>
+                                <!---
                                 <th>Status</th>
+                                 -->
                                 <th>Reward</th>
                                 <th>Delete</th>
                             </tr>
@@ -197,6 +207,67 @@
     </main>
     <!--/upvote-->
 
+    <!--downvote-->
+    <main class="downvote-section" id="downvote">
+        <section class="downvote-options" id="downvote-options">
+            <h1>Downvotes happen twice a day at 11 GMT</h1>
+            <div class="container">
+                <div>
+                    <h2>Mark a post or comment for downvote </h2>
+                    <p>You can submit as many posts as you want. The weight for a downvote depends on the amount of
+                        other submissions and the weight of your delegation.
+                        The percentage you select is the absolute maximum the post will go down (except in certain
+                        circumstances you can't influence).</p>
+                    <form id="downvoteForm">
+                        <div class="form-group">
+                            <input type="text" id="newDownvote" class="form-control"
+                                placeholder="full link to post or comment" />
+                        </div>
+
+                        <div class="form-group">
+                            Max downvote
+                            <select class="form-control" id="newDownvoteLimit">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="80" selected="selected">80</option>
+                                <option value="99">99</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="newDownvoteReason" class="form-control"
+                                placeholder="reason for downvote" autocomplete="off"/>
+                        </div>
+
+                        <button class="btn-downvote-form" id="sendNewDownvote">Send</button>
+                        <button class="btn-downvote-form" id="sendingDownvote">Sending...</button>
+                    </form>
+                </div>
+                <br>
+                <h2>History of your downvotes</h2>
+                <div class="downvote-content-card" id="downvoteContentCard">
+
+                    <table class="downvote-table" id="downvotesTable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Reason</th>
+                                <th>User</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Payout</th>
+                                <th>Limit</th>
+                                <th>Status</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="downvotesTableBody">
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!--/downvote-->
     <footer>
 
     </footer>
@@ -207,6 +278,7 @@
     <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
     <script src="{{ url_for('static', filename='js/upvote.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/downvote.js') }}"></script>
 
 </body>
 

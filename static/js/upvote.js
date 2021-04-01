@@ -3,8 +3,9 @@
 let curatorBtn = document.getElementById("curator-btn");
 if (curatorBtn) {
     curatorBtn.onclick = function () {
-        showById('upvote');
         hideById('admin');
+        hideById('downvote');
+        showById('upvote');
         // showById('upvote-options');
         loadUpvote();
     }
@@ -130,13 +131,13 @@ function loadUpvotesTable(data) {
         newcontent = document.createTextNode((value.payout).replace("T", " "));
         newcolumn.appendChild(newcontent);
         newrow.appendChild(newcolumn);
-
+        /*
         // Status
         newcolumn = document.createElement('td');
         newcontent = document.createTextNode(value.status);
         newcolumn.appendChild(newcontent);
         newrow.appendChild(newcolumn);
-
+        */
         // Reward
         newcolumn = document.createElement('td');
         newcontent = document.createTextNode(value.reward_sp + ' HP');
@@ -145,17 +146,16 @@ function loadUpvotesTable(data) {
 
         // Delete
         newcolumn = document.createElement('td');
-        if (value.status == 'in queue') {
-            newlink = document.createElement('a');
-            newlink.setAttribute('href', '#');
-            newlink.setAttribute('id', 'deleteUpvote' + value.id);
-            newicon = document.createElement('img');
-            newicon.setAttribute('src', 'static/img/icons/trash.svg');
-            newicon.setAttribute('height', '24px');
-            newlink.appendChild(newicon);
-            newcolumn.appendChild(newlink);
-            console.log(newcolumn);
-        }
+        newlink = document.createElement('a');
+        newlink.setAttribute('href', '#');
+        newlink.setAttribute('id', 'deleteUpvote' + value.id);
+        newicon = document.createElement('img');
+        newicon.setAttribute('src', 'static/img/icons/trash.svg');
+        newicon.setAttribute('height', '24px');
+        newlink.appendChild(newicon);
+        newcolumn.appendChild(newlink);
+        console.log(newcolumn);
+
         newrow.appendChild(newcolumn);
 
         document.getElementById('upvotesTableBody').appendChild(newrow);
