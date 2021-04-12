@@ -400,7 +400,11 @@ function loadAdminDownvotesTable(downvotes) {
             }
         }
     });
-    $('#adminDownvotesTable').DataTable({ 'order': [] });
+    $('#adminDownvotesTable').DataTable({
+        'order': [],
+        'lengthChange': false,
+        "ordering": false
+    });
 }
 
 function adminDeleteDownvote(id) {

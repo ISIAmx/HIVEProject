@@ -1,38 +1,42 @@
-
 function hideById(id) {
-    document.getElementById(id).style.display = "none";
+  document.getElementById(id).style.display = "none";
 }
 
 function showById(id) {
-    document.getElementById(id).style.display = "block";
+  document.getElementById(id).style.display = "block";
+}
+
+function hideByClass(classname) {
+  let elems = document.getElementsByClassName(classname);
+  for (let i = 0; i < elems.length; i++) {
+    elems[i].style.display = "none";
+  }
 }
 
 function showById(id, inline) {
-    if (inline === undefined) {
-        document.getElementById(id).style.display = 'block';
-    } else {
-        document.getElementById(id).style.display = 'inline-block';
-    }
+  if (inline === undefined) {
+    document.getElementById(id).style.display = "block";
+  } else {
+    document.getElementById(id).style.display = "inline-block";
+  }
 }
 
 function setValueById(id, value) {
-    document.getElementById(id).value = value;
+  document.getElementById(id).value = value;
 }
 
 function setContentById(id, content) {
-    document.getElementById(id).innerHTML = content;
+  document.getElementById(id).innerHTML = content;
 }
 
 function getValueById(id) {
-    return document.getElementById(id).value;
+  return document.getElementById(id).value;
 }
 
 function hideShowContent(tableId) {
-    if (document.getElementById(tableId).style.display == "block") {
-        document.getElementById(tableId).style.display = "none";
-    }
-    else {
-        document.getElementById(tableId).style.display = "block";
-    }
-
+  if (document.getElementById(tableId).style.display == "block") {
+    document.getElementById(tableId).style.display = "none";
+  } else {
+    document.getElementById(tableId).style.display = "block";
+  }
 }

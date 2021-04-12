@@ -39,8 +39,8 @@ class upvotes(UserMixin, db.Model):
     link = db.Column(db.String(200), nullable=False)
     user = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
-    slug = db.Column(db.String(100), nullable=False)
-    title = db.Column(db.String(100), nullable=False)
+    slug = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
     type = db.Column(db.String(20), nullable=False)
     payout = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), nullable=False)
@@ -98,35 +98,45 @@ def load_user(id):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    if request.method == 'POST':
-        return render_template('home.html', profile=True)
-    else:
-        return render_template('home.html', profile=False)
+    return render_template('index.html')
+
+
+# @app.route('/', methods=['GET', 'POST'])
+# def home():
+#    if request.method == 'POST':
+#        return render_template('home.html', profile=True)
+#    else:
+#        return render_template('home.html', profile=False)
 
 
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
     if flask.request.method == 'POST':
-        json_data = request.get_json()
-        username = json_data['username']
-        password = json_data['password']
+        username = None
+        userhash = None
+
+        if 'username' in request.form:
+            username = request.form['username']
+        if 'userhash' in request.form:
+            userhash = request.form['userhash']
         userip = '0.0.0.0'
 
-        # Nuevo usuario
-        user = users.query.filter_by(account=username).first()
-        if user:
-            status = 'Bien! Usuario Existente'
-            return json.dumps({'status': status})  # Devuleve Json
+        # save a new entry
+        if username and userhash:
+            # check if user exists
+            user = users.query.filter_by(account=username).first()
+            if user:
+                # Devuleve Json
+                return errorHandler.throwError("User already registered")
+            else:
+                # Write
+                new_user = users(account=username, hash=generate_password_hash(
+                    userhash, method='sha256'), ip=userip)
+                db.session.add(new_user)
+                db.session.commit()
+                return json.dumps({'status': 'success'})  # Devuleve Json
         else:
-            # Insert new user
-            new_user = users(account=username, hash=generate_password_hash(
-                password, method='sha256'), ip=userip)
-            db.session.add(new_user)
-            db.session.commit()
-            status = 'Registrado con éxito'
-            return json.dumps({'status': status})  # Devuleve Json
-    else:
-        return render_template('register.html')
+            errorHandler.throwError("Unsufficient userdata to register")
 
 
 @ app.route('/login', methods=['GET', 'POST'])

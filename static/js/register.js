@@ -1,69 +1,65 @@
+document.getElementById("registerNav").onclick = function () {
+  hideByClass("page");
+  showById("register");
+};
 
-document.getElementById('btn-register').onclick = function () {
-	let regUser = getValueById('registerUsername');
-	let regKey = getValueById('registerPostingKey');
+document.getElementById("registerNow").onclick = function () {
+  let regUser = getValueById("registerUsername");
+  let regKey = getValueById("registerPostingKey");
+  if (!steem.auth.isWif(regKey)) {
+    regKey = steem.auth.toWif(regUser, regKey, "posting");
+  }
 
-	if (!steem.auth.isWif(regKey)) {
-		regKey = steem.auth.toWif(regUser, regKey, 'posting');
-	}
+  let pub = steem.auth.wifToPublic(regKey);
+  steem.api.setOptions({ url: "https://api.pharesim.me" });
+  steem.api.getAccounts([regUser], function (err, result) {
+    let keys = result[0]["posting"]["key_auths"];
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i][0] == pub) {
+        username = result[0]["name"];
+        userhash = Sha256.hash("username" + regKey + "curangel");
+        register();
+      }
+    }
 
-	let pub = steem.auth.wifToPublic(regKey);
+    if (username == "") {
+      registerError("Registration failed, wrong key for the specified user!");
+    }
+  });
+};
 
-	steem.api.setOptions({ url: 'https://api.pharesim.me' });
-	steem.api.getAccounts([regUser], function (err, result) {
-
-		if (result.length != 0) {
-			let keys = result[0]['posting']['key_auths'];
-
-			for (var i = 0; i < keys.length; i++) {
-				if (keys[i][0] == pub) {
-					username = result[0]['name'];
-					usercode = regKey;
-					register();
-				} else {
-					errorMessage();
-				}
-			}
-		}
-		else {
-			errorMessage();
-		}
-	});
-}
-
-const errorMessage = () => {
-	document.getElementById('message').innerText = '';
-	document.getElementById('message').innerText = 'Datos Incorrectos'
-}
-
+document.getElementById("loginFromRegister").onclick = function () {
+  hideByClass("page");
+  showById("loggedOut");
+};
 
 function register() {
-	//$('#btn-register').click(function () {
-	user = username;
-	pwd = usercode;
+  $.ajax({
+	url: "/register",
+	dataType: "json",
+    data: {
+      username: username,
+      userhash: userhash,
+    },
+    type: "POST",
+  })
+    .fail(function () {
+      registerError("Registration failed, please try again");
+    })
+    .done(function (data) {
+      if (data["error"]) {
+        registerError(data["error"]);
+      } else {
+        hideById("registerError");
+        hideById("registerForm");
+        showById("registerSuccess");
+      }
+    });
 
-	$.ajax({
-		url: '/register', //URL a la cual se enviará la peticion
-		type: 'POST', //Petiición POST al servidor
-		dataType: "json", //Se esperan datos Json del servidor
-		contentType: "application/json", //Contenido enviado: json
-		data: JSON.stringify({
-			username: user,
-			password: pwd,
-		}),//Envia datos en formato json
-
-		success: function (data) {
-			alert(data.status);
-		},
-		error: function (error) { //Si se obtiene algun error
-			console.log(error);
-		}
-	});
-
-	usercode = '';
+  userhash = "";
 }
 
-
-function getValueById(id) {
-	return document.getElementById(id).value;
+function registerError(message) {
+  setContentById("registerError", message);
+  showById("registerError");
 }
