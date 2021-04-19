@@ -32,6 +32,14 @@ class users(UserMixin, db.Model):
     curator = db.Column(db.Boolean, nullable=False, default=False)
 
 
+class blacklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(100), nullable=False)
+    reason = db.Column(db.String(100), nullable=False)
+    created = db.Column(db.DateTime, server_default=func.now(), nullable=False)
+    account = db.Column(db.String(100), nullable=False)
+
+
 class upvotes(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     account = db.Column(db.String(100), nullable=False)
@@ -77,36 +85,20 @@ class upvotesSchema(ma.Schema):
                   'user', 'category', 'slug', 'title', 'type', 'payout', 'status', 'vote_time', 'reward_sbd', 'reward_sp')
 
 
+class blacklistSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'user', 'reason', 'created', 'account')
+
+
 class downvotesSchema(ma.Schema):
     class Meta:
         fields = ('id', 'account', 'created', 'reason', 'link',
                   'user', 'category', 'slug', 'title', 'type', 'payout', 'reward', 'maxi', 'status')
 
 
-# Para usar Flask-login
-login_manager = LoginManager()
-login_manager.login_view = 'app'
-login_manager.init_app(app)
-
-# Cargador de usuario
-
-
-@login_manager.user_loader
-def load_user(id):
-    return users.query.get(int(id))
-
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('index.html')
-
-
-# @app.route('/', methods=['GET', 'POST'])
-# def home():
-#    if request.method == 'POST':
-#        return render_template('home.html', profile=True)
-#    else:
-#        return render_template('home.html', profile=False)
 
 
 @ app.route('/register', methods=['GET', 'POST'])
@@ -132,6 +124,8 @@ def register():
                 # Write
                 new_user = users(account=username, hash=generate_password_hash(
                     userhash, method='sha256'), ip=userip)
+                # new_user = users(account=username, hash=generate_password_hash(
+                #    userhash, method='sha256'), ip=userip)
                 db.session.add(new_user)
                 db.session.commit()
                 return json.dumps({'status': 'success'})  # Devuleve Json
@@ -141,99 +135,56 @@ def register():
 
 @ app.route('/login', methods=['GET', 'POST'])
 def login():
+    hived_nodes = [
+        'https://api.pharesim.me',
+        'https://anyx.io',
+        'https://api.hive.blog',
+        'https://api.openhive.network',
+    ]
 
-    if flask.request.method == 'POST':
-        json_data = request.get_json()
-        username = json_data['username']
-        userhash = json_data['userhash']
+    client = Hive(nodes=hived_nodes)
+    # output variable
+    user = {}
 
-        user = users.query.filter_by(account=username).first()
+    # get and set variables
+    username = None
+    userhash = None
+    if 'username' in request.form:
+        username = request.form['username']
+    if 'userhash' in request.form:
+        userhash = request.form['userhash']
+    print(userhash)
+    # check user exists
+    users_schema = usersSchema()
+    results = users.query.filter_by(account=username).first()
+    results = users_schema.dump(results)
+    print(results)
 
-        if not user or not check_password_hash(user.hash, userhash):
-            status = '2'
-            return json.dumps({'status': status})  # Devuleve Json
+    # if not user or not check_password_hash(user.hash, userhash):
+    #       status = '2'
+    #       return json.dumps({'status': status})  # Devuleve Json
+
+    if len(results) > 0:
+        # if results['hash'] == userhash:
+        if check_password_hash(results['hash'], userhash):
+            user['account'] = username
+            user['admin'] = results['admin']
+            user['curator'] = results['curator']
+            user['delegator'] = 0
+
+            delegations = client.get_vesting_delegations(
+                username, 'curangel', 1)
+            if len(delegations) > 0 and delegations[0]['delegatee'] == 'curangel':
+                user['delegator'] = 1
+            print(user)
+            return user
         else:
-            login_user(user)
-            status = '1'
-            return json.dumps({'status': status})  # Devuleve Json
+            return errorHandler.throwError('Login failed')
     else:
-        return render_template('login.html')
+        return errorHandler.throwError('Unknown user')
 
 
-@ app.route('/profile')
-@ login_required
-def profile():
-    # check if user is an admin
-    user = users.query.filter_by(account=current_user.account).first()
-
-    if(user != None):
-        return render_template('profile.html', username=current_user.account, admin_user=user.admin, curator_user=user.curator)
-    else:
-        return render_template('profile.html', username=current_user.account)
-
-
-@ app.route('/profile_data')
-@ login_required
-def profile_dt():
-    admin_schema = usersSchema(many=True)
-    admin_table = users.query.all()
-    json_data = admin_schema.dump(admin_table)
-    print(json_data)
-    return jsonify(json_data)
-
-
-@ app.route('/delete_account', methods=['POST'])
-@ login_required
-def delete_account():
-    if flask.request.method == 'POST':
-        json_data = request.get_json()
-        id = json_data["id"]
-        user_account = users.query.filter_by(id=id).one()
-        db.session.delete(user_account)
-        db.session.commit()
-    return json.dumps({'success': True})
-
-
-@ app.route('/update_account_status', methods=['POST'])
-@ login_required
-def update_account():
-    if flask.request.method == 'POST':
-        json_data = request.get_json()
-        id = json_data["id"]
-        option = json_data["option"]
-
-        if(option == 1):
-            cur = users.query.get(id)
-            if(cur.curator == True):
-                cur.curator = False
-            else:
-                cur.curator = True
-        if(option == 2):
-            dele = users.query.get(id)
-            if(dele.delegator == True):
-                dele.delegator = False
-            else:
-                dele.delegator = True
-        if(option == 3):
-            adm = users.query.get(id)
-            if(adm.admin == True):
-                adm.admin = False
-            else:
-                adm.admin = True
-
-        db.session.commit()
-        return json.dumps({'success': True})  # Devuleve Json
-
-
-@ app.route('/logout')
-@ login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
-
-
-@app.route('/admin', methods=['POST'])
-@login_required
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     hived_nodes = [
         'https://api.pharesim.me',
@@ -248,6 +199,17 @@ def admin():
     username = None
     userhash = None
     deleteuv = None
+    switch = None
+    blackl = None
+    reason = None
+    deletebl = None
+
+    # Schemas
+
+    upvotes_schema = upvotesSchema(many=True)
+    blacklist_schema = blacklistSchema(many=True)
+    downvotes_schema = downvotesSchema(many=True)
+    # Schemas
 
     if 'username' in request.form:
         username = request.form['username']
@@ -255,6 +217,18 @@ def admin():
         userhash = request.form['userhash']
     if 'deleteupvote' in request.form:
         deleteuv = request.form['deleteupvote']
+    if 'deletedownvote' in request.form:
+        deletedv = request.form['deletedownvote']
+    if 'switch' in request.form:
+        switch = request.form['switch']
+    if 'account' in request.form:
+        account = request.form['account']
+    if 'blacklist' in request.form:
+        blackl = request.form['blacklist']
+    if 'reason' in request.form:
+        reason = request.form['reason']
+    if 'deleteBlacklist' in request.form:
+        deletebl = request.form['deleteBlacklist']
 
     # check permissions
     users_schema = usersSchema()
@@ -264,50 +238,116 @@ def admin():
     if result['admin'] != True:
         return errorHandler.throwError('No permission')
 
-    if deleteuv:
-        upvotes_schema = upvotesSchema()
+    if switch:
+        if switch == 'admin' or switch == 'delete':
+            users_table = users.query.filter_by(
+                admin=True).order_by(users.id.desc())
+            results = users_schema.dump(users_table)
+            if len(results) < 2:
+                errorHandler.throwError('There has to be one admin')
+        if switch == 'delete':
+            users.query.filter_by(id=account).delete()
+            db.session.commit()
+        else:
+            users_table = users.query.filter_by(id=account).first()
+            results = users_schema.dump(users_table)
+            if results[switch] == 1:
+                new = 0
+            else:
+                new = 1
+            db.session.query(users).filter(
+                users.id == account).update({switch: new})
+            db.session.commit()
+        data['status'] = 'success'
+
+    elif deleteuv:
         result = upvotes.query.filter_by(id=deleteuv).first()
         result = upvotes_schema.dump(result)
         if result['status'] == 'in queue':
             upvotes.query.filter_by(id=deleteuv).delete()
             db.session.commit()
             data['status'] = 'success'
-            return data
         else:
             return errorHandler.throwError(
                 'Only posts in queue can be removed from the queue. Duh!')
+    elif blackl:
+        if reason:
+            bl = blacklist.query.filter_by(user=blackl).first()
+            bl = blacklist_schema.dump(bl)
+            if len(bl) > 0:
+                return errorHandler.throwError('User is already blacklisted.')
+            newbl = blacklist(user=blackl, reason=reason, account=username)
+            db.session.add(newbl)
+            db.session.commit()
+            data['status'] = 'success'
+        else:
+            return errorHandler.throwError('You need to give a reason to blacklisting')
+    elif deletebl:
+        blacklist.query.filter_by(id=deletebl).delete()
+        db.session.commit()
+        data['status'] = 'success'
+
+    elif deletedv:
+        downvotes_schema = downvotes_schema()
+        post = downvotes.query.filter_by(id=deletedv).first()
+        post = downvotes_schema.dump(post)
+        if (post['status'] == 'wait'):
+            downvotes.query.filter_by(id=deletedv).delete()
+            data['status'] = 'success'
+        else:
+            return errorHandler.throwError('Only posts that are waiting for a downvote can be removed. Duh!')
+
     else:
-        upvotes_schema = upvotesSchema(many=True)
-        upvote_table = upvotes.query.filter_by().order_by(upvotes.created.desc())
-        dataJson = upvotes_schema.dump(upvote_table)
-        data['upvotes'] = dataJson
+        # get users
+        users_schema = usersSchema(many=True)
+        users_table = users.query.filter_by().order_by(users.created.desc())
+        results = users_schema.dump(users_table)
+        usersl = []
+
+        for row in results:
+            user = row
+            user['delegator'] = 0
+            delegations = client.get_vesting_delegations(
+                user['account'], 'curangel', 1)
+            if len(delegations) > 0 and delegations[0]['delegatee'] == 'curangel':
+                user['delegator'] = 1
+            usersl.append(user)
+        data['users'] = usersl
+        print(data['users'])
+        # get upvotes
+        #upvotes_schema = upvotesSchema(many=True)
+        #upvote_table = upvotes.query.filter_by().order_by(upvotes.created.desc())
+        #dataJson = upvotes_schema.dump(upvote_table)
+        #data['upvotes'] = dataJson
 
         # check if posts have been voted by us
-        i = 0
-        for dic in data['upvotes']:
-            for key in data['upvotes'][i]:
-                if key == 'link':
-                    if(was_voted_post(data['upvotes'][i][key])):
-                        print("This post has been voted")
-                        upvotes_schema = upvotesSchema()
-                        upvotes.query.filter_by(
-                            id=data['upvotes'][i]['id']).delete()
-                        db.session.commit()
-                    else:
-                        print("This post hasn't been voted")
-                        print(data['upvotes'][i]['id'])
-            i = i+1
+        #i = 0
+        # for dic in data['upvotes']:
+        #    for key in data['upvotes'][i]:
+        #        if key == 'link':
+        #            if(was_voted_post(data['upvotes'][i][key])):
+        #                print("This post has been voted")
+        #                upvotes_schema = upvotesSchema()
+        #                upvotes.query.filter_by(
+        #                    id=data['upvotes'][i]['id']).delete()
+        #                db.session.commit()
+        #            else:
+        #                print("This post hasn't been voted")
+        #                print(data['upvotes'][i]['id'])
+        #    i = i+1
 
         # get upvotes
-        upvotes_schema = upvotesSchema(many=True)
         upvote_table = upvotes.query.filter_by().order_by(upvotes.created.desc())
         data['upvotes'] = upvotes_schema.dump(upvote_table)
 
-        # get downvotes
-        downvotes_schema = downvotesSchema(many=True)
+        # get blacklist
+        blacklist_table = blacklist.query.filter_by().order_by(blacklist.created.desc())
+        data['blacklist'] = blacklist_schema.dump(blacklist_table)
+
+        # get downvote
         downvote_table = downvotes.query.filter_by().order_by(downvotes.created.desc())
         data['downvotes'] = downvotes_schema.dump(downvote_table)
-        return data
+    return data
 
 
 def was_voted_post(post_link):
@@ -474,7 +514,6 @@ def downvote():
 
 
 @app.route('/upvote', methods=['POST'])
-@login_required
 def upvote():
     print("Upvote function")
     hived_nodes = [

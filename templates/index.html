@@ -43,7 +43,7 @@
                         <li class="nav-item loggedIn"><a class="nav-link hidden" id="downvoteNav" href="#">DOWNVOTE</a>
                         </li>
                         <li class="nav-item loggedIn"><a class="nav-link hidden" id="adminNav" href="#">ADMIN</a></li>
-                        <li class="nav-item hidden loggedIn"><a class="nav-link hidden " id="logoutNav"
+                        <li class="nav-item loggedIn hidden"><a class="nav-link hidden" id="logoutNav"
                                 href="#">SALIR</a>
                         </li>
                         <li class="nav-item loggedOut"><a class="nav-link " id="loginNav" href="#">INGRESAR</a></li>
@@ -290,7 +290,7 @@
                                     <th>Title</th>
                                     <th>Type</th>
                                     <th>Payout</th>
-                                    <th>Status</th>
+                                    <!--<th>Status</th>-->
                                     <th>Reward</th>
                                     <th>Delete</th>
                             </thead>
@@ -356,7 +356,7 @@
                             <div id="admin-accordion-collapseOne" class="collapse"
                                 aria-labelledby="admin-accordion-headingOne" data-parent="#admin-accordion">
                                 <div class="card-body table-responsive">
-                                    <table class="table table-hover table-striped" id="usersTable">
+                                    <table class="table table-hover table-sm table-striped" id="usersTable">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Account</th>
@@ -527,8 +527,13 @@
     <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
     <script src="//cdn.jsdelivr.net/npm/steem/dist/steem.min.js"></script>
     <script src="{{url_for('static', filename='js/sha256.js')}}"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="{{url_for('static', filename='js/helpers.js')}}"></script>
     <script src="{{url_for('static', filename='js/register.js')}}"></script>
+    <script src="{{url_for('static', filename='js/admin.js')}}"></script>
+    <script src="{{url_for('static', filename='js/loggedout.js')}}"></script>
+    <script src="{{url_for('static', filename='js/upvote.js')}}"></script>
 </body>
 
 </html>

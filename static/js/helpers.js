@@ -13,6 +13,13 @@ function hideByClass(classname) {
   }
 }
 
+function showByClass(classname) {
+  let elems = document.getElementsByClassName(classname);
+  for (let i = 0; i < elems.length; i++) {
+    elems[i].style.display = 'block';
+  }
+}
+
 function showById(id, inline) {
   if (inline === undefined) {
     document.getElementById(id).style.display = "block";
