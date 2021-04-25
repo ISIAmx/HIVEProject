@@ -40,7 +40,7 @@
                 <div class="inline-items text-sm-right">
                     <ul>
                         <li class="nav-item loggedIn"><a class="nav-link hidden" id="upvoteNav" href="#">UPVOTE</a></li>
-                        <li class="nav-item loggedIn"><a class="nav-link hidden" id="downvoteNav" href="#">DOWNVOTE</a>
+                        <li class="nav-item loggedIn"><a class="nav-link " id="downvoteNav" href="#">DOWNVOTE</a>
                         </li>
                         <li class="nav-item loggedIn"><a class="nav-link hidden" id="adminNav" href="#">ADMIN</a></li>
                         <li class="nav-item loggedIn hidden"><a class="nav-link hidden" id="logoutNav"
@@ -240,7 +240,7 @@
                     <br />
                     <div class="table-responsive">
                         <h2>History of your downvotes</h2>
-                        <table class="table table-hover table-sm table-striped" id="downvotesTable">
+                        <table class="table table-hover table-sm" id="downvotesTable">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>Date</th>
@@ -282,7 +282,7 @@
                     <br>
                     <div class="table-responsive">
                         <h2>History of your suggestions</h2>
-                        <table class="table table-hover table-sm table-striped" id="upvotesTable">
+                        <table class="table table-hover table-sm" id="upvotesTable">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>Date</th>
@@ -321,10 +321,10 @@
                                 </h2>
                             </div>
 
-                            <div id="admin-accordion-collapseThree" class="collapse show"
+                            <div id="admin-accordion-collapseThree" class="collapse"
                                 aria-labelledby="admin-accordion-collapseThree" data-parent="#admin-accordion">
                                 <div class="card-body table-responsive">
-                                    <table class="table table-hover table-sm table-striped" id="adminUpvotesTable">
+                                    <table class="table table-hover table-sm" id="adminUpvotesTable">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Date</th>
@@ -353,10 +353,10 @@
                                     </button>
                                 </h2>
                             </div>
-                            <div id="admin-accordion-collapseOne" class="collapse"
+                            <div id="admin-accordion-collapseOne" class="collapse show"
                                 aria-labelledby="admin-accordion-headingOne" data-parent="#admin-accordion">
                                 <div class="card-body table-responsive">
-                                    <table class="table table-hover table-sm table-striped" id="usersTable">
+                                    <table class="table table-hover table-sm" id="usersTable">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Account</th>
@@ -534,6 +534,7 @@
     <script src="{{url_for('static', filename='js/admin.js')}}"></script>
     <script src="{{url_for('static', filename='js/loggedout.js')}}"></script>
     <script src="{{url_for('static', filename='js/upvote.js')}}"></script>
+    <script src="{{url_for('static', filename='js/downvote.js')}}"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 db:
-  file: ../../curangel.sqlite3
+  file: curangel.db
 nodes:
   - https://api.pharesim.me
   - https://api.hive.blog

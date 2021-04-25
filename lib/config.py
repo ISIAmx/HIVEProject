@@ -1,15 +1,10 @@
 import os
 
 from yaml import safe_load
-from munch import munchify, Munch
+from munch import munchify
 
-
-_project_root = os.path.join(
-    os.path.split(__file__)[0],
-    "../../../"
-)
-
-with open (os.path.join(_project_root, "config/config.yaml"), "r") as f:
+with open(os.path.join(os.path.split(__file__)[0],
+                       "../config/config.yaml.default"), "r") as f:
     config = munchify(safe_load(f))
 
 
