@@ -25,7 +25,7 @@ function loadAdmin() {
       } else {
         loadAdminUserTable(data["users"]);
         loadAdminUpvotesTable(data["upvotes"]);
-        loadAdminBlacklistTable(data['blacklist']);
+        loadAdminBlacklistTable(data["blacklist"]);
         loadAdminDownvotesTable(data["downvotes"]);
       }
     });
@@ -53,15 +53,9 @@ function loadAdminUserTable(users) {
     let modicon = "";
     if (value.curator == 1) {
       icon = "done";
-      /*modicon = "done";*/
     } else {
       icon = "clear";
-      /*modicon = "done";*/
     }
-    /*let newimage = document.createElement("img");
-    newimage.setAttribute("src", "static/img/icons/" + icon + ".svg");
-    newimage.setAttribute("height", "24px");
-    newcolumn.appendChild(newimage);*/
     let newlink = document.createElement("a");
     newlink.setAttribute("href", "#");
     newlink.setAttribute("id", "switchCuratorStatus" + value.id);
@@ -91,15 +85,9 @@ function loadAdminUserTable(users) {
     newcolumn.setAttribute("data-sort", value.admin);
     if (value.admin == 1) {
       icon = "done";
-      /*modicon = "clear";*/
     } else {
       icon = "clear";
-      /*modicon = "done";*/
     }
-    /*newimage = document.createElement("img");
-    newimage.setAttribute("src", "static/img/icons/" + icon + ".svg");
-    newimage.setAttribute("height", "24px");
-    newcolumn.appendChild(newimage);*/
     newlink = document.createElement("a");
     newlink.setAttribute("href", "#");
     newlink.setAttribute("id", "switchAdminStatus" + value.id);
@@ -341,7 +329,7 @@ function loadAdminBlacklistTable(blacklist) {
     newcolumn.appendChild(newlink);
     newrow.appendChild(newcolumn);
 
-    //Crated
+    //Created
     newcolumn = document.createElement("td");
     newcontent = document.createTextNode(value.created);
     newcolumn.appendChild(newcontent);

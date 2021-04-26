@@ -1,6 +1,7 @@
 document.getElementById("upvoteNav").onclick = function () {
   hideById("admin");
   hideById("downvote");
+  hideById("about");
   showById("upvote");
   loadUpvote();
 };
@@ -9,11 +10,54 @@ document.getElementById("upvoteForm").onsubmit = function () {
   return false;
 };
 
+document.getElementById("checkMana").onclick = function () {
+  $.ajax({
+    url: "/mana",
+    data: {
+      username: localStorage.username,
+      userhash: localStorage.userhash,
+      account: localStorage.username,
+    },
+    type: "POST",
+  })
+    .fail(function () {
+      alert("Error checking mana");
+    })
+    .done(function (data) {
+      if (data["error"]) {
+        alert(data["error"]);
+      } else {
+        var mana = parseInt(data["mana"]);
+        var stamina_bar = parseFloat(data["stamina"]["value"]);
+        var stamina_step = parseInt(data["stamina"]["step"]);
+        var max_mana = 43200000000;
+        var mana_pct = (mana / max_mana) * 100;
+        var to_recharge_full = stamina_step + 1 - stamina_bar;
+        var to_recharge_bar = 1 - stamina_bar;
+        var current_pct = 100 - 20 * stamina_step;
+        var hours_per_bar = 3;
+        var output = "";
+        output += "Mana: " + mana_pct.toString() + "%\n";
+        output += "Stamina: -" + to_recharge_full.toString() + "\n";
+        output += "Current max vote weight: " + current_pct.toString() + "%\n";
+        if (current_pct < 100) {
+          var bar_recharge_minutes = to_recharge_bar * hours_per_bar * 60;
+          output +=
+            "Max vote weight increases in: " +
+            bar_recharge_minutes.toString() +
+            " minutes";
+        }
+        alert(output);
+      }
+    });
+};
+
 function loadUpvote() {
   $.ajax({
     url: "/upvote",
     data: {
       username: localStorage.getItem("username"),
+      userhash: localStorage.getItem("userhash"),
     },
     type: "POST",
   })
@@ -45,6 +89,7 @@ document.getElementById("sendNewUpvote").onclick = function () {
       data: {
         postlink: getValueById("newUpvote"),
         username: localStorage.getItem("username"),
+        userhash: localStorage.getItem("userhash"),
       },
       type: "POST",
     })
@@ -124,13 +169,13 @@ function loadUpvotesTable(data) {
     newcontent = document.createTextNode(value.payout.replace("T", " "));
     newcolumn.appendChild(newcontent);
     newrow.appendChild(newcolumn);
-    /*
-        // Status
-        newcolumn = document.createElement('td');
-        newcontent = document.createTextNode(value.status);
-        newcolumn.appendChild(newcontent);
-        newrow.appendChild(newcolumn);
-        */
+
+    // Status
+    newcolumn = document.createElement("td");
+    newcontent = document.createTextNode(value.status);
+    newcolumn.appendChild(newcontent);
+    newrow.appendChild(newcolumn);
+
     // Reward
     newcolumn = document.createElement("td");
     newcontent = document.createTextNode(value.reward_sp + " HP");

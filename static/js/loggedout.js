@@ -12,7 +12,7 @@ document.getElementById("delegateNow").onclick = function () {
   let signat =
     "https://hivesigner.com/sign/delegateVestingShares?delegator=" +
     delegator +
-    "&delegatee=votame&vesting_shares=" +
+    "&delegatee=curangel&vesting_shares=" +
     delegatex +
     "%20HP";
   window.location.href = signat;
